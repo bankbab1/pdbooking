@@ -116,23 +116,25 @@
     }
 
     async function fetchLastMenu(userId) {
-      const today = new Date().toISOString().split("T")[0];
-      const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}&date=${today}`;
+  try {
+    const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const latestDate = data.submit_date || "-";
-        const latestMenu = data.menu || "❌ Not ordered yet";
-
-        document.getElementById("latestDate").innerText = latestDate;
-        document.getElementById("latestMenu").innerText = latestMenu;
-        document.getElementById("latestMenuCard").style.display = "block";
-      } catch (err) {
-        console.error("Error fetching last menu:", err);
-      }
+    if (data.menu && data.menu.trim() !== '') {
+      document.getElementById("latestDate").innerText = data.submit_date || "-";
+      document.getElementById("latestMenu").innerText = data.menu;
+    } else {
+      document.getElementById("latestDate").innerText = "-";
+      document.getElementById("latestMenu").innerText = "❌ No order yet";
     }
+
+    document.getElementById("latestMenuCard").style.display = "block";
+  } catch (err) {
+    console.error("Error fetching last menu:", err);
+  }
+}
+
 
     async function init() {
       const urlParams = new URLSearchParams(window.location.search);
