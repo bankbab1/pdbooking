@@ -139,17 +139,28 @@
         }
         // 👇 Add this helper before init()
         function isWithinOrderTime() {
-            const now = new Date();
-            const gmt7Offset = 7 * 60; // minutes
-            const localOffset = now.getTimezoneOffset(); // in minutes
-            const offsetDiff = gmt7Offset + localOffset;
+    const now = new Date();
+    const gmt7Offset = 7 * 60; // minutes
+    const localOffset = now.getTimezoneOffset(); // in minutes
+    const offsetDiff = gmt7Offset + localOffset;
 
-            // Convert to GMT+7 by adjusting time
-            now.setMinutes(now.getMinutes() + offsetDiff);
+    // Convert local time to GMT+7 time
+    now.setMinutes(now.getMinutes() + offsetDiff);
 
-            const hour = now.getHours();
-            return hour >= 7 && hour < 18;
-        }
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+
+    if (hour < 7) return false; // before 7 AM, block
+    if (hour > 18) return false; // after 6 PM, block
+
+    // Block after 14:40 (2:40 PM)
+    if (hour === 14 && minutes >= 35) return false;
+
+    return true; // allowed otherwise
+}
+
+
+        
         async function init() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get("code");
