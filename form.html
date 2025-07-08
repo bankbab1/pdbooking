@@ -209,6 +209,17 @@
             </div>
         </div>
     </div>
+    <!-- Modal for Follow Other User Menu -->
+<div id="followOtherUserMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="followModalTitle" aria-describedby="followModalDesc" style="display:none;">
+  <div class="modal-content">
+    <h3 id="followModalTitle">Follow Menu</h3>
+    <textarea id="followMenuTextarea" rows="5" style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" readonly></textarea>
+    <div class="modal-buttons" style="text-align: right; margin-top: 1rem;">
+      <button id="closeFollowModalBtn" class="btn-cancel" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
     <!-- Confirm Submit Modal -->
 <div id="confirmModal" class="modal">
   <div class="modal-content">
@@ -334,8 +345,9 @@
 
       // (Optional) Add your follow logic here on click
       followBtn.addEventListener("click", () => {
-        alert(`Follow clicked on menu: ${item.menu}`);
-      });
+  openFollowOtherUserMenuModal(item.menu, item.users);
+});
+
 
       menuItem.appendChild(header);
       menuItem.appendChild(userList);
@@ -350,6 +362,32 @@
   }
 }
 
+
+        function openFollowOtherUserMenuModal(menu, users) {
+  const modal = document.getElementById("followOtherUserMenuModal");
+  const textarea = document.getElementById("followMenuTextarea");
+
+  // Build the text content listing users who chose this menu
+  let text = `Menu: ${menu}\n\nUsers:\n`;
+  users.forEach(u => {
+    text += `- ${u.user}\n`;
+  });
+
+  textarea.value = text;
+  modal.style.display = "block";
+}
+
+document.getElementById("closeFollowModalBtn").addEventListener("click", () => {
+  document.getElementById("followOtherUserMenuModal").style.display = "none";
+});
+
+// Close modal if user clicks outside the modal content area
+window.addEventListener("click", (e) => {
+  const modal = document.getElementById("followOtherUserMenuModal");
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
 
 
         function isWithinOrderTime() {
