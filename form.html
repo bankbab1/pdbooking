@@ -129,6 +129,19 @@
             cursor: pointer;
             margin-left: 0.5rem;
         }
+        .menu-header {
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0.3rem;
+}
+
+.user-list {
+  margin-left: 1rem;
+  list-style: disc;
+  padding-left: 1rem;
+  display: none; /* default hidden */
+}
 
         .btn-cancel {
             background: #ccc;
@@ -259,41 +272,62 @@
         }
 
         async function fetchTodayMenus() {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=todayMenus`);
-        const data = await res.json();
+  try {
+    // Replace YOUR_SCRIPT_URL with your actual URL that returns grouped menus
+    const res = await fetch(SCRIPT_URL + "?todayMenus=true");
+    const data = await res.json();
 
-        const container = document.getElementById("menuListContainer");
-        container.innerHTML = "";
-
-        if (!data.length) return;
-
-        data.forEach(item => {
-            const div = document.createElement("div");
-            div.style.marginBottom = "0.75rem";
-            div.innerHTML = `
-                <p style="margin:0;"><strong>🍛 ${item.menu}</strong> (${item.count} user${item.count > 1 ? 's' : ''})</p>
-                <button class="followBtn" data-menu="${encodeURIComponent(item.menu)}">Follow</button>
-            `;
-            container.appendChild(div);
-        });
-
-        document.getElementById("todayMenusCard").style.display = "block";
-
-        document.querySelectorAll(".followBtn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const menuToFollow = decodeURIComponent(btn.getAttribute("data-menu"));
-                document.getElementById("editMenuTextarea").value = menuToFollow;
-                document.getElementById("editModalTitle").innerText = "Review Followed Menu";
-                document.getElementById("editModal").style.display = "block";
-                document.getElementById("editMenuTextarea").focus();
-            });
-        });
-
-    } catch (err) {
-        console.error("Error fetching today menus:", err);
+    if (!data || !data.length) {
+      document.getElementById("todayMenusCard").style.display = "none";
+      return;
     }
+
+    const container = document.getElementById("menuListContainer");
+    container.innerHTML = "";
+
+    data.forEach(item => {
+      const menuItem = document.createElement("div");
+      menuItem.className = "menu-item";
+      menuItem.style.marginBottom = "1rem";
+
+      const header = document.createElement("div");
+      header.className = "menu-header";
+      header.tabIndex = 0;
+      header.setAttribute("role", "button");
+      header.setAttribute("aria-expanded", "false");
+      header.style.cursor = "pointer";
+      header.style.fontWeight = "600";
+      header.textContent = `${item.menu} (${item.count} user${item.count > 1 ? 's' : ''})`;
+
+      const userList = document.createElement("ul");
+      userList.className = "user-list";
+      userList.style.display = "none";
+      userList.style.marginLeft = "1rem";
+      userList.style.listStyle = "disc";
+
+      item.users.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = user;
+        userList.appendChild(li);
+      });
+
+      header.addEventListener("click", () => {
+        const expanded = header.getAttribute("aria-expanded") === "true";
+        header.setAttribute("aria-expanded", !expanded);
+        userList.style.display = expanded ? "none" : "block";
+      });
+
+      menuItem.appendChild(header);
+      menuItem.appendChild(userList);
+      container.appendChild(menuItem);
+    });
+
+    document.getElementById("todayMenusCard").style.display = "block";
+  } catch (err) {
+    console.error("Error fetching today's menus:", err);
+  }
 }
+
 
         function isWithinOrderTime() {
             const now = new Date();
@@ -377,6 +411,7 @@
   <h3>📋 Today's Menus by Users</h3>
   <div id="menuListContainer"></div>
 </div>
+
 
 
             `;
