@@ -383,21 +383,25 @@
 document.getElementById("closeFollowModalBtn").addEventListener("click", () => {
   document.getElementById("followOtherUserMenuModal").style.display = "none";
 });
-
-        document.getElementById("okFollowModalBtn").addEventListener("click", () => {
+        
+document.getElementById("okFollowModalBtn").addEventListener("click", () => {
   const textarea = document.getElementById("followMenuTextarea");
   const menuLines = textarea.value.trim().split("\n");
   if (menuLines.length > 0 && menuLines[0].startsWith("Menu:")) {
     const menuText = menuLines[0].replace("Menu:", "").trim();
-    document.getElementById("menu").value = menuText;
+    const menuInput = document.getElementById("menu");
+
+    // Set menu value
+    menuInput.value = menuText;
+
+    // Close modal
+    document.getElementById("followOtherUserMenuModal").style.display = "none";
+
+    // ⏩ Trigger confirmation flow (same as EditModal)
+    document.getElementById('menuForm').requestSubmit();
   }
-
-  document.getElementById("followOtherUserMenuModal").style.display = "none";
-
-  // Optional: scroll and focus the menu input
-  document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
-  document.getElementById("menu").focus();
 });
+
 
         
 // Close modal if user clicks outside the modal content area
