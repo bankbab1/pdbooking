@@ -144,20 +144,21 @@
     const localOffset = now.getTimezoneOffset(); // in minutes
     const offsetDiff = gmt7Offset + localOffset;
 
-    // Convert local time to GMT+7 time
     now.setMinutes(now.getMinutes() + offsetDiff);
 
     const hour = now.getHours();
     const minutes = now.getMinutes();
 
-    if (hour < 7) return false; // before 7 AM, block
-    if (hour > 18) return false; // after 6 PM, block
+    // Block before 7 AM and after 6 PM
+    if (hour < 7 || hour >= 18) return false;
 
-    // Block after 14:40 (2:40 PM)
-    if (hour === 14 && minutes >= 35) return false;
+    // Block between 14:36 and 14:44 inclusive
+    if (hour === 14 && minutes >= 36 && minutes < 45) return false;
 
-    return true; // allowed otherwise
+    // Otherwise allowed
+    return true;
 }
+
 
 
         
