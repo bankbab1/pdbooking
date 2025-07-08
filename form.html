@@ -535,12 +535,20 @@ window.addEventListener("click", (e) => {
             const submitButton = document.querySelector('#menuForm button');
 
             if (!isWithinOrderTime()) {
-    // Disable all buttons globally
+    // Disable all buttons except Cancel buttons
     document.querySelectorAll("button").forEach(btn => {
-        btn.disabled = true;
-        btn.style.background = '#ccc';
-        btn.style.cursor = 'not-allowed';
-        btn.title = "⏰ Ordering is disabled outside 7:00 AM – 6:00 PM";
+        if (!btn.classList.contains("btn-cancel")) {
+            btn.disabled = true;
+            btn.style.background = '#ccc';
+            btn.style.cursor = 'not-allowed';
+            btn.title = "⏰ Ordering is disabled outside 7:00 AM – 6:00 PM";
+        } else {
+            // Enable Cancel buttons so user can close modals
+            btn.disabled = false;
+            btn.style.background = '';
+            btn.style.cursor = 'pointer';
+            btn.title = '';
+        }
     });
 
     // Block submit button click with a friendly alert
@@ -555,6 +563,7 @@ window.addEventListener("click", (e) => {
     warning.style.marginBottom = "1rem";
     document.getElementById("menuForm").before(warning);
 }
+
 
 
             fetchLastMenu(profile.userId);
