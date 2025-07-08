@@ -2,142 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🍽️ Daily Food Menu</title>
+  <title>Login with LINE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f7f9fc;
-      color: #333;
-      padding: 2rem;
-      margin: 0;
+      font-family: sans-serif;
+      background: #f5f7fa;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-
-    .container {
+    .login-box {
       background: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      max-width: 480px;
-      width: 100%;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 1.8rem;
-      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       text-align: center;
-      color: #2c3e50;
     }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    select, input[type="date"], textarea {
-      width: 100%;
-      margin-top: 0.25rem;
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      box-sizing: border-box;
-      resize: vertical;
-    }
-
-    textarea {
-      height: 100px;
-    }
-
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
-      background: #007BFF;
-      color: white;
+      background: #00c300;
       border: none;
-      font-size: 1rem;
-      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: white;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
-
     button:hover {
-      background: #0056cc;
-    }
-
-    #status {
-      margin-top: 1rem;
-      text-align: center;
-      font-weight: 600;
-      color: #28a745;
-    }
-
-    @media (max-width: 500px) {
-      .container {
-        padding: 1.25rem;
-      }
+      background: #00a100;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🍽️ Daily Food Menu</h2>
-    <form id="menuForm">
-      <label for="name">👤 Your Name:</label>
-      <select id="name" required>
-        <option value="">-- Select Your Name --</option>
-        <option>User 1</option>
-        <option>User 2</option>
-        <option>User 3</option>
-        <option>User 4</option>
-        <option>User 5</option>
-        <option>User 6</option>
-        <!-- Add up to User 30 -->
-      </select>
-
-      <label for="date">📅 Date:</label>
-      <input type="date" id="date" required>
-
-      <label for="menu">🍛 Food Menu:</label>
-      <textarea id="menu" placeholder="Enter your food for today..." required></textarea>
-
-      <button type="submit">✅ Submit Menu</button>
-    </form>
-    <p id="status"></p>
+  <div class="login-box">
+    <h2>🍽️ Welcome</h2>
+    <p>Login with LINE to enter your food menu</p>
+    <button onclick="loginWithLINE()">🔓 Login with LINE</button>
   </div>
 
   <script>
-    document.getElementById('date').valueAsDate = new Date();
+    const CLIENT_ID = 'YOUR_LINE_CHANNEL_ID';
+    const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/form.html';
+    const STATE = 'abc123';
 
-    document.getElementById('menuForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value;
-      const date = document.getElementById('date').value;
-      const menu = document.getElementById('menu').value;
-
-      fetch('YOUR_GOOGLE_SCRIPT_URL_HERE', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, date, menu })
-      });
-
-      document.getElementById('status').innerText = "✅ Submitted successfully!";
-      document.getElementById('menuForm').reset();
-      document.getElementById('date').valueAsDate = new Date();
-    });
+    function loginWithLINE() {
+      const url = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${STATE}&scope=profile%20openid`;
+      window.location.href = url;
+    }
   </script>
 </body>
 </html>
