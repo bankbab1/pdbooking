@@ -273,10 +273,7 @@
 
         async function fetchTodayMenus() {
   try {
-    // Replace YOUR_SCRIPT_URL with your actual URL that returns grouped menus
-    //const res = await fetch(SCRIPT_URL + "?todayMenus=true");
     const res = await fetch(SCRIPT_URL + "?action=todayMenus");
-
     const data = await res.json();
 
     if (!data || !data.length) {
@@ -308,11 +305,10 @@
       userList.style.listStyle = "disc";
 
       item.users.forEach(user => {
-  const li = document.createElement("li");
-  li.textContent = user.user;  // <-- user.user is the username string
-  userList.appendChild(li);
-});
-
+        const li = document.createElement("li");
+        li.textContent = user.user;  // username string
+        userList.appendChild(li);
+      });
 
       header.addEventListener("click", () => {
         const expanded = header.getAttribute("aria-expanded") === "true";
@@ -320,8 +316,30 @@
         userList.style.display = expanded ? "none" : "block";
       });
 
+      // Create Follow button
+      const followBtn = document.createElement("button");
+      followBtn.textContent = "Follow";
+      followBtn.style.marginTop = "0.5rem";
+      followBtn.style.padding = "0.4rem 0.8rem";
+      followBtn.style.background = "#28a745";
+      followBtn.style.color = "white";
+      followBtn.style.border = "none";
+      followBtn.style.borderRadius = "6px";
+      followBtn.style.fontWeight = "600";
+      followBtn.style.cursor = "pointer";
+
+      followBtn.addEventListener("mouseenter", () => followBtn.style.background = "#1e7e34");
+      followBtn.addEventListener("mouseleave", () => followBtn.style.background = "#28a745");
+
+      // (Optional) Add your follow logic here on click
+      followBtn.addEventListener("click", () => {
+        alert(`Follow clicked on menu: ${item.menu}`);
+      });
+
       menuItem.appendChild(header);
       menuItem.appendChild(userList);
+      menuItem.appendChild(followBtn);
+
       container.appendChild(menuItem);
     });
 
@@ -330,6 +348,7 @@
     console.error("Error fetching today's menus:", err);
   }
 }
+
 
 
         function isWithinOrderTime() {
