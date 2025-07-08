@@ -173,23 +173,27 @@
       }
 
       const content = document.getElementById('content');
-      content.innerHTML = `
-        <h2>👋 Hello, ${profile.displayName}</h2>
-        <form id="menuForm">
-          <label>Date:</label>
-          <input type="date" id="date" required>
-          <label>Menu:</label>
-          <textarea id="menu" required></textarea>
-          <button type="submit">✅ Submit Menu</button>
-        </form>
-        <p id="status"></p>
+content.innerHTML = `
+  <div style="text-align:center; margin-bottom: 1rem;">
+    <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
+  </div>
+  <h2>👋 Hello, ${profile.displayName}</h2>
+  <form id="menuForm">
+    <label>Date:</label>
+    <input type="date" id="date" required>
+    <label>Menu:</label>
+    <textarea id="menu" required></textarea>
+    <button type="submit">✅ Submit Menu</button>
+  </form>
+  <p id="status"></p>
 
-        <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
-          <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
-          <p><strong>Date:</strong> <span id="latestDate">-</span></p>
-          <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
-        </div>
-      `;
+  <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
+    <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
+    <p><strong>Date:</strong> <span id="latestDate">-</span></p>
+    <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
+  </div>
+`;
+
 
       document.getElementById('date').valueAsDate = new Date();
 
