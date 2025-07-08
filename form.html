@@ -274,7 +274,9 @@
         async function fetchTodayMenus() {
   try {
     // Replace YOUR_SCRIPT_URL with your actual URL that returns grouped menus
-    const res = await fetch(SCRIPT_URL + "?todayMenus=true");
+    //const res = await fetch(SCRIPT_URL + "?todayMenus=true");
+    const res = await fetch(SCRIPT_URL + "?action=todayMenus");
+
     const data = await res.json();
 
     if (!data || !data.length) {
@@ -306,10 +308,11 @@
       userList.style.listStyle = "disc";
 
       item.users.forEach(user => {
-        const li = document.createElement("li");
-        li.textContent = user;
-        userList.appendChild(li);
-      });
+  const li = document.createElement("li");
+  li.textContent = user.user;  // <-- user.user is the username string
+  userList.appendChild(li);
+});
+
 
       header.addEventListener("click", () => {
         const expanded = header.getAttribute("aria-expanded") === "true";
