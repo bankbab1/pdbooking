@@ -296,7 +296,8 @@
       header.setAttribute("aria-expanded", "false");
       header.style.cursor = "pointer";
       header.style.fontWeight = "600";
-      header.textContent = `${item.menu} (${item.count} user${item.count > 1 ? 's' : ''})`;
+      header.textContent = `🍛 ${item.menu} (${item.count} user${item.count > 1 ? 's' : ''})`;
+
 
       const userList = document.createElement("ul");
       userList.className = "user-list";
