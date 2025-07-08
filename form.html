@@ -2,239 +2,244 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Submit Food Menu</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f7f9fc;
-            color: #333;
-            padding: 2rem;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <title>Submit Food Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      padding: 2rem;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
 
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            max-width: 480px;
-            width: 100%;
-        }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      max-width: 480px;
+      width: 100%;
+    }
 
-        h2 {
-            margin-top: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            text-align: center;
-            color: #2c3e50;
-        }
+    h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      color: #2c3e50;
+    }
 
-        label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: 600;
-        }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
 
-        input[type="date"],
-        textarea {
-            width: 100%;
-            margin-top: 0.25rem;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            resize: vertical;
-        }
+    input[type="date"],
+    textarea {
+      width: 100%;
+      margin-top: 0.25rem;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      resize: vertical;
+    }
 
-        textarea {
-            height: 100px;
-        }
+    textarea {
+      height: 100px;
+    }
 
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.75rem;
-            background: #007BFF;
-            color: white;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #007BFF;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
 
-        button:hover {
-            background: #0056cc;
-        }
+    button:hover {
+      background: #0056cc;
+    }
 
-        #status {
-            margin-top: 1rem;
-            text-align: center;
-            font-weight: 600;
-            color: #28a745;
-        }
-    </style>
+    #status {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+      color: #28a745;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container" id="content">
-        <p>Loading LINE profile...</p>
-    </div>
-
-    <script>
-        const CLIENT_ID = '2007709795';
-        const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
-        const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/form.html';
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqXcJws4Z1V1oekILeZjNkBPOyJHJOVgUsTTzYUglmd00wbUwijgiRCEahYa00bI0M/exec';
-
-        async function getAccessToken(code) {
-            const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    grant_type: "authorization_code",
-                    code,
-                    redirect_uri: REDIRECT_URI,
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET
-                })
-            });
-            return res.json();
-        }
-
-        async function getProfile(access_token) {
-            const res = await fetch("https://api.line.me/v2/profile", {
-                headers: { Authorization: "Bearer " + access_token }
-            });
-            return res.json();
-        }
-
-        async function fetchLastMenu(userId) {
-            try {
-                const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-
-                if (data.menu && data.menu.trim() !== '') {
-                    document.getElementById("latestDate").innerText = data.submit_date || "-";
-                    document.getElementById("latestMenu").innerText = data.menu;
-                } else {
-                    document.getElementById("latestDate").innerText = "-";
-                    document.getElementById("latestMenu").innerText = "❌ No order yet";
-                }
-
-                document.getElementById("latestMenuCard").style.display = "block";
-            } catch (err) {
-                console.error("Error fetching last menu:", err);
-            }
-        }
-
-
-        async function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get("code");
-
-            let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
-            let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
-
-            if (!profile || !tokenData) {
-                if (!code) {
-                    document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
-                    return;
-                }
-
-                try {
-                    tokenData = await getAccessToken(code);
-                    if (!tokenData.access_token) {
-                        document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
-                        return;
-                    }
-
-                    profile = await getProfile(tokenData.access_token);
-                    if (!profile.displayName) {
-                        document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
-                        return;
-                    }
-
-                    sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-                    sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-                    window.history.replaceState({}, document.title, REDIRECT_URI);
-                } catch (error) {
-                    console.error(error);
-                    document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
-                    return;
-                }
-            }
-
-            const content = document.getElementById('content');
-            content.innerHTML = `
-  <div style="text-align:center; margin-bottom: 1rem;">
-    <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
+  <div class="container" id="content">
+    <p>Loading LINE profile...</p>
   </div>
-  <h2>👋 Hello, ${profile.displayName}</h2>
-  <form id="menuForm">
-    <label>Date:</label>
-    <input type="date" id="date" disabled>
-    <label>Menu:</label>
-    <textarea id="menu" required></textarea>
-    <button type="submit">✅ Submit Menu</button>
-  </form>
-  <p id="status"></p>
 
-  <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
-    <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
-    <p><strong>Date:</strong> <span id="latestDate">-</span></p>
-    <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
-  </div>
-`;
+  <script>
+    const CLIENT_ID = '2007709795';
+    const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
+    const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/form.html';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqXcJws4Z1V1oekILeZjNkBPOyJHJOVgUsTTzYUglmd00wbUwijgiRCEahYa00bI0M/exec';
 
-            const dateInput = document.getElementById('date');
-            dateInput.valueAsDate = new Date();  // sets date picker to today
-            dateInput.disabled = true;           // disables editing
+    async function getAccessToken(code) {
+      const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: REDIRECT_URI,
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET
+        })
+      });
+      return res.json();
+    }
 
-            // Fetch and show latest submitted menu
-            fetchLastMenu(profile.userId);
+    async function getProfile(access_token) {
+      const res = await fetch("https://api.line.me/v2/profile", {
+        headers: { Authorization: "Bearer " + access_token }
+      });
+      return res.json();
+    }
 
-            document.getElementById('menuForm').addEventListener('submit', function (e) {
-                e.preventDefault();
+    async function fetchLastMenu(userId) {
+      try {
+        const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-                const date = document.getElementById('date').value;
-                const menu = document.getElementById('menu').value;
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: profile.userId,
-                        displayName: profile.displayName,
-                        date,
-                        menu
-                    })
-                });
-
-                document.getElementById('status').innerText = "✅ Submitted successfully!";
-                document.getElementById('menuForm').reset();
-                document.getElementById('date').valueAsDate = new Date();
-
-                // Update latest card immediately
-                document.getElementById("latestDate").innerText = date;
-                document.getElementById("latestMenu").innerText = menu;
-                document.getElementById("latestMenuCard").style.display = "block";
-            });
+        if (data.menu && data.menu.trim() !== '') {
+          document.getElementById("latestDate").innerText = data.submit_date || "-";
+          document.getElementById("latestMenu").innerText = data.menu;
+        } else {
+          document.getElementById("latestDate").innerText = "-";
+          document.getElementById("latestMenu").innerText = "❌ No order yet";
         }
 
-        window.onload = init;
-    </script>
+        document.getElementById("latestMenuCard").style.display = "block";
+      } catch (err) {
+        console.error("Error fetching last menu:", err);
+      }
+    }
+
+    async function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
+      let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
+
+      if (!profile || !tokenData) {
+        if (!code) {
+          document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
+          return;
+        }
+
+        try {
+          tokenData = await getAccessToken(code);
+          if (!tokenData.access_token) {
+            document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
+            return;
+          }
+
+          profile = await getProfile(tokenData.access_token);
+          if (!profile.displayName) {
+            document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
+            return;
+          }
+
+          sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+          sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+          window.history.replaceState({}, document.title, REDIRECT_URI);
+        } catch (error) {
+          console.error(error);
+          document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
+          return;
+        }
+      }
+
+      const content = document.getElementById('content');
+      content.innerHTML = `
+        <div style="text-align:center; margin-bottom: 1rem;">
+          <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
+        </div>
+        <h2>👋 Hello, ${profile.displayName}</h2>
+        <form id="menuForm">
+          <label>Date:</label>
+          <input type="date" id="date" disabled>
+          <label>Menu:</label>
+          <textarea id="menu" required></textarea>
+          <button type="submit">✅ Submit Menu</button>
+        </form>
+        <p id="status"></p>
+
+        <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
+          <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
+          <p><strong>Date:</strong> <span id="latestDate">-</span></p>
+          <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
+        </div>
+      `;
+
+      // ✅ Set today’s date and disable editing
+      const dateInput = document.getElementById('date');
+      dateInput.disabled = false;
+      dateInput.valueAsDate = new Date();
+      dateInput.disabled = true;
+
+      // Fetch and show last submitted menu
+      fetchLastMenu(profile.userId);
+
+      document.getElementById('menuForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const date = document.getElementById('date').value;
+        const menu = document.getElementById('menu').value;
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: profile.userId,
+            displayName: profile.displayName,
+            date,
+            menu
+          })
+        });
+
+        document.getElementById('status').innerText = "✅ Submitted successfully!";
+        document.getElementById('menuForm').reset();
+
+        // Restore today's date
+        dateInput.disabled = false;
+        dateInput.valueAsDate = new Date();
+        dateInput.disabled = true;
+
+        // Update menu card
+        document.getElementById("latestDate").innerText = date;
+        document.getElementById("latestMenu").innerText = menu;
+        document.getElementById("latestMenuCard").style.display = "block";
+      });
+    }
+
+    window.onload = init;
+  </script>
 </body>
 
 </html>
