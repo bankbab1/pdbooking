@@ -168,16 +168,19 @@
     </div>
 
     <!-- Modal for Edit -->
-    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle" aria-describedby="editModalDesc">
+    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle"
+        aria-describedby="editModalDesc">
         <div class="modal-content">
             <h3 id="editModalTitle">Edit Menu</h3>
-            <textarea id="editMenuTextarea" rows="5" style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
-            <div class="modal-buttons">
-                <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
+            <textarea id="editMenuTextarea" rows="5"
+                style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
+            <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <button id="saveEditBtn" class="btn-save" type="button">OK</button>
+                <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
             </div>
         </div>
     </div>
+
 
     <script>
         const CLIENT_ID = '2007709795';
@@ -348,13 +351,15 @@
 
             saveEditBtn.addEventListener('click', () => {
                 const newMenu = editTextarea.value.trim();
-                if (newMenu) {
-                    document.getElementById('menu').value = newMenu;
-                    editModal.style.display = 'none';
-                    document.getElementById('menu').focus();
-                } else {
+                if (!newMenu) {
                     alert('Menu cannot be empty!');
+                    return;
                 }
+                document.getElementById('menu').value = newMenu;
+                editModal.style.display = 'none';
+
+                // Trigger form submit programmatically
+                document.getElementById('menuForm').requestSubmit();
             });
 
             window.addEventListener('click', (e) => {
@@ -362,6 +367,7 @@
                     editModal.style.display = 'none';
                 }
             });
+
 
             document.getElementById('menuForm').addEventListener('submit', function (e) {
                 e.preventDefault();
