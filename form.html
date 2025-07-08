@@ -115,89 +115,113 @@
       return res.json();
     }
 
+    async function fetchLastMenu(userId) {
+      const today = new Date().toISOString().split("T")[0];
+      const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}&date=${today}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const latestDate = data.submit_date || "-";
+        const latestMenu = data.menu || "❌ Not ordered yet";
+
+        document.getElementById("latestDate").innerText = latestDate;
+        document.getElementById("latestMenu").innerText = latestMenu;
+        document.getElementById("latestMenuCard").style.display = "block";
+      } catch (err) {
+        console.error("Error fetching last menu:", err);
+      }
+    }
+
     async function init() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
 
-  // Try to get token/profile from sessionStorage first
-  let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
-  let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
+      let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
+      let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
 
-  if (!profile || !tokenData) {
-    // No saved token/profile, so fetch now
-    if (!code) {
-      document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
-      return;
-    }
+      if (!profile || !tokenData) {
+        if (!code) {
+          document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
+          return;
+        }
 
-    try {
-      tokenData = await getAccessToken(code);
-      if (!tokenData.access_token) {
-        document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
-        return;
+        try {
+          tokenData = await getAccessToken(code);
+          if (!tokenData.access_token) {
+            document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
+            return;
+          }
+
+          profile = await getProfile(tokenData.access_token);
+          if (!profile.displayName) {
+            document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
+            return;
+          }
+
+          sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+          sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+          window.history.replaceState({}, document.title, REDIRECT_URI);
+        } catch (error) {
+          console.error(error);
+          document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
+          return;
+        }
       }
 
-      profile = await getProfile(tokenData.access_token);
-      if (!profile.displayName) {
-        document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
-        return;
-      }
+      const content = document.getElementById('content');
+      content.innerHTML = `
+        <h2>👋 Hello, ${profile.displayName}</h2>
+        <form id="menuForm">
+          <label>Date:</label>
+          <input type="date" id="date" required>
+          <label>Menu:</label>
+          <textarea id="menu" required></textarea>
+          <button type="submit">✅ Submit Menu</button>
+        </form>
+        <p id="status"></p>
 
-      // Save to sessionStorage to persist across refresh
-      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+        <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
+          <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
+          <p><strong>Date:</strong> <span id="latestDate">-</span></p>
+          <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
+        </div>
+      `;
 
-      // Clean the URL to remove ?code=... after successful login (optional)
-      window.history.replaceState({}, document.title, REDIRECT_URI);
+      document.getElementById('date').valueAsDate = new Date();
 
-    } catch (error) {
-      console.error(error);
-      document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
-      return;
+      // Fetch and show latest submitted menu
+      fetchLastMenu(profile.userId);
+
+      document.getElementById('menuForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const date = document.getElementById('date').value;
+        const menu = document.getElementById('menu').value;
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: profile.userId,
+            displayName: profile.displayName,
+            date,
+            menu
+          })
+        });
+
+        document.getElementById('status').innerText = "✅ Submitted successfully!";
+        document.getElementById('menuForm').reset();
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Update latest card immediately
+        document.getElementById("latestDate").innerText = date;
+        document.getElementById("latestMenu").innerText = menu;
+        document.getElementById("latestMenuCard").style.display = "block";
+      });
     }
-  }
-
-  // Now you have profile and tokenData, build the form
-  const content = document.getElementById('content');
-  content.innerHTML = `
-    <h2>👋 Hello, ${profile.displayName}</h2>
-    <form id="menuForm">
-      <label>Date:</label>
-      <input type="date" id="date" required>
-      <label>Menu:</label>
-      <textarea id="menu" required></textarea>
-      <button type="submit">✅ Submit Menu</button>
-    </form>
-    <p id="status"></p>
-  `;
-
-  document.getElementById('date').valueAsDate = new Date();
-
-  document.getElementById('menuForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const date = document.getElementById('date').value;
-    const menu = document.getElementById('menu').value;
-
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: profile.userId,
-        displayName: profile.displayName,
-        date,
-        menu
-      })
-    });
-
-    document.getElementById('status').innerText = "✅ Submitted successfully!";
-    document.getElementById('menuForm').reset();
-    document.getElementById('date').valueAsDate = new Date();
-  });
-}
-
-
 
     window.onload = init;
   </script>
