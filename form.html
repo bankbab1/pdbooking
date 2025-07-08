@@ -535,20 +535,27 @@ window.addEventListener("click", (e) => {
             const submitButton = document.querySelector('#menuForm button');
 
             if (!isWithinOrderTime()) {
-                submitButton.onmousedown = function () {
-                    alert("⏰ It's not available to order now.\nPlease come back between 7:00 AM – 6:00 PM.");
-                };
-                submitButton.disabled = true;
-                submitButton.style.background = '#ccc';
-                submitButton.style.cursor = 'not-allowed';
+    // Disable all buttons globally
+    document.querySelectorAll("button").forEach(btn => {
+        btn.disabled = true;
+        btn.style.background = '#ccc';
+        btn.style.cursor = 'not-allowed';
+        btn.title = "⏰ Ordering is disabled outside 7:00 AM – 6:00 PM";
+    });
 
-                const warning = document.createElement("p");
-                warning.textContent = "⏰ Ordering is only available from 7:00 AM to 6:00 PM.";
-                warning.style.color = "red";
-                warning.style.fontWeight = "bold";
-                warning.style.marginBottom = "1rem";
-                document.getElementById("menuForm").before(warning);
-            }
+    // Block submit button click with a friendly alert
+    submitButton.onmousedown = function () {
+        alert("⏰ It's not available to order now.\nPlease come back between 7:00 AM – 6:00 PM.");
+    };
+
+    const warning = document.createElement("p");
+    warning.textContent = "⏰ Ordering is only available from 7:00 AM to 6:00 PM.";
+    warning.style.color = "red";
+    warning.style.fontWeight = "bold";
+    warning.style.marginBottom = "1rem";
+    document.getElementById("menuForm").before(warning);
+}
+
 
             fetchLastMenu(profile.userId);
             await fetchTodayMenus(); // ⬅️ Add this here
