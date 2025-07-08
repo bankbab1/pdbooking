@@ -213,12 +213,15 @@
 <div id="followOtherUserMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="followModalTitle" aria-describedby="followModalDesc" style="display:none;">
   <div class="modal-content">
     <h3 id="followModalTitle">Follow Menu</h3>
-    <textarea id="followMenuTextarea" rows="5" style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" readonly></textarea>
-    <div class="modal-buttons" style="text-align: right; margin-top: 1rem;">
-      <button id="closeFollowModalBtn" class="btn-cancel" type="button">Close</button>
+    <textarea id="followMenuTextarea" rows="5"
+      style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" readonly></textarea>
+    <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <button id="okFollowModalBtn" class="btn-save" type="button">OK</button>
+      <button id="closeFollowModalBtn" class="btn-cancel" type="button">Cancel</button>
     </div>
   </div>
 </div>
+
 
     <!-- Confirm Submit Modal -->
 <div id="confirmModal" class="modal">
@@ -381,6 +384,22 @@ document.getElementById("closeFollowModalBtn").addEventListener("click", () => {
   document.getElementById("followOtherUserMenuModal").style.display = "none";
 });
 
+        document.getElementById("okFollowModalBtn").addEventListener("click", () => {
+  const textarea = document.getElementById("followMenuTextarea");
+  const menuLines = textarea.value.trim().split("\n");
+  if (menuLines.length > 0 && menuLines[0].startsWith("Menu:")) {
+    const menuText = menuLines[0].replace("Menu:", "").trim();
+    document.getElementById("menu").value = menuText;
+  }
+
+  document.getElementById("followOtherUserMenuModal").style.display = "none";
+
+  // Optional: scroll and focus the menu input
+  document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("menu").focus();
+});
+
+        
 // Close modal if user clicks outside the modal content area
 window.addEventListener("click", (e) => {
   const modal = document.getElementById("followOtherUserMenuModal");
