@@ -180,6 +180,18 @@
             </div>
         </div>
     </div>
+    <!-- Confirm Submit Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <h3>Confirm Submit Menu</h3>
+    <p><strong>Menu:</strong> <span id="confirmMenuText"></span></p>
+    <div class="modal-buttons">
+      <button id="cancelConfirmBtn" class="btn-cancel">Cancel</button>
+      <button id="confirmSubmitBtn" class="btn-save">Confirm</button>
+    </div>
+  </div>
+</div>
+
 
 
     <script>
@@ -345,6 +357,52 @@
                 editTextarea.focus();
             });
 
+            // Confirm Submit Modal Logic
+const confirmModal = document.getElementById('confirmModal');
+const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+
+cancelConfirmBtn.addEventListener('click', () => {
+    confirmModal.style.display = 'none';
+});
+
+confirmSubmitBtn.addEventListener('click', () => {
+    confirmModal.style.display = 'none';
+
+    const date = document.getElementById('date').value;
+    const menu = document.getElementById('menu').value;
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userId: profile.userId,
+            displayName: profile.displayName,
+            date,
+            menu
+        })
+    });
+
+    document.getElementById('status').innerText = "✅ Submitted successfully!";
+    document.getElementById('menuForm').reset();
+
+    const dateInput = document.getElementById('date');
+    dateInput.valueAsDate = new Date();
+    dateInput.disabled = true;
+
+    document.getElementById("latestDate").innerText = date;
+    document.getElementById("latestMenu").innerText = menu;
+    document.getElementById("latestMenuCard").style.display = "block";
+});
+
+// Close modal if clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === confirmModal) {
+        confirmModal.style.display = 'none';
+    }
+});
+
             cancelEditBtn.addEventListener('click', () => {
                 editModal.style.display = 'none';
             });
@@ -370,32 +428,20 @@
 
 
             document.getElementById('menuForm').addEventListener('submit', function (e) {
-                e.preventDefault();
+    e.preventDefault();
 
-                const date = document.getElementById('date').value;
-                const menu = document.getElementById('menu').value;
+    const menuText = document.getElementById('menu').value.trim();
+    if (!menuText) {
+        alert("Menu cannot be empty.");
+        return;
+    }
 
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: profile.userId,
-                        displayName: profile.displayName,
-                        date,
-                        menu
-                    })
-                });
+    document.getElementById('confirmMenuText').innerText = menuText;
+    document.getElementById('confirmModal').style.display = 'block';
+});
 
-                document.getElementById('status').innerText = "✅ Submitted successfully!";
-                document.getElementById('menuForm').reset();
 
-                dateInput.valueAsDate = new Date();
-                dateInput.disabled = true;
-
-                document.getElementById("latestDate").innerText = date;
-                document.getElementById("latestMenu").innerText = menu;
-                document.getElementById("latestMenuCard").style.display = "block";
+                
             });
         }
 
