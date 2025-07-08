@@ -157,6 +157,21 @@
             background: #0056cc;
         }
 
+        .btn-back {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn-back:hover {
+  background-color: #0056b3;
+}
+
         #latestMenuCard button {
             margin-top: 1rem;
             padding: 0.5rem 1rem;
@@ -441,33 +456,46 @@ window.addEventListener("click", (e) => {
             let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
 
             if (!profile || !tokenData) {
-                if (!code) {
-                    document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
-                    return;
-                }
+  if (!code) {
+    document.getElementById('content').innerHTML = `
+      <p>❌ LINE login failed. No code provided.</p>
+      <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+    `;
+    return;
+  }
 
-                try {
-                    tokenData = await getAccessToken(code);
-                    if (!tokenData.access_token) {
-                        document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
-                        return;
-                    }
+  try {
+    tokenData = await getAccessToken(code);
+    if (!tokenData.access_token) {
+      document.getElementById('content').innerHTML = `
+        <p>❌ Failed to get access token.</p>
+        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+      `;
+      return;
+    }
 
-                    profile = await getProfile(tokenData.access_token);
-                    if (!profile.displayName) {
-                        document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
-                        return;
-                    }
+    profile = await getProfile(tokenData.access_token);
+    if (!profile.displayName) {
+      document.getElementById('content').innerHTML = `
+        <p>❌ Failed to get profile displayName.</p>
+        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+      `;
+      return;
+    }
 
-                    sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-                    sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-                    window.history.replaceState({}, document.title, REDIRECT_URI);
-                } catch (error) {
-                    console.error(error);
-                    document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
-                    return;
-                }
-            }
+    sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+    sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+    window.history.replaceState({}, document.title, REDIRECT_URI);
+  } catch (error) {
+    console.error(error);
+    document.getElementById('content').innerHTML = `
+      <p>❌ Error during login: ${error.message}</p>
+      <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+    `;
+    return;
+  }
+}
+
 
             const content = document.getElementById('content');
             content.innerHTML = `
