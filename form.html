@@ -116,57 +116,74 @@
     }
 
     async function init() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
 
-      if (!code) {
-        document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
-        return;
-      }
+  if (!code) {
+    document.getElementById('content').innerHTML = "<p>❌ LINE login failed. No code provided.</p>";
+    return;
+  }
 
-      const tokenData = await getAccessToken(code);
-      const profile = await getProfile(tokenData.access_token);
-
-      const content = document.getElementById('content');
-      content.innerHTML = `
-        <h2>👋 Hello, ${profile.displayName}</h2>
-        <form id="menuForm">
-          <label>Date:</label>
-          <input type="date" id="date" required>
-
-          <label>Menu:</label>
-          <textarea id="menu" required></textarea>
-
-          <button type="submit">✅ Submit Menu</button>
-        </form>
-        <p id="status"></p>
-      `;
-
-      document.getElementById('date').valueAsDate = new Date();
-
-      document.getElementById('menuForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const date = document.getElementById('date').value;
-        const menu = document.getElementById('menu').value;
-
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: profile.userId,
-            displayName: profile.displayName,
-            date,
-            menu
-          })
-        });
-
-        document.getElementById('status').innerText = "✅ Submitted successfully!";
-        document.getElementById('menuForm').reset();
-        document.getElementById('date').valueAsDate = new Date();
-      });
+  try {
+    const tokenData = await getAccessToken(code);
+    console.log("Token data:", tokenData);
+    
+    if (!tokenData.access_token) {
+      document.getElementById('content').innerHTML = "<p>❌ Failed to get access token.</p>";
+      return;
     }
+    
+    const profile = await getProfile(tokenData.access_token);
+    console.log("Profile data:", profile);
+
+    if (!profile.displayName) {
+      document.getElementById('content').innerHTML = "<p>❌ Failed to get profile displayName.</p>";
+      return;
+    }
+
+    const content = document.getElementById('content');
+    content.innerHTML = `
+      <h2>👋 Hello, ${profile.displayName}</h2>
+      <form id="menuForm">
+        <label>Date:</label>
+        <input type="date" id="date" required>
+        <label>Menu:</label>
+        <textarea id="menu" required></textarea>
+        <button type="submit">✅ Submit Menu</button>
+      </form>
+      <p id="status"></p>
+    `;
+
+    document.getElementById('date').valueAsDate = new Date();
+
+    document.getElementById('menuForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const date = document.getElementById('date').value;
+      const menu = document.getElementById('menu').value;
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: profile.userId,
+          displayName: profile.displayName,
+          date,
+          menu
+        })
+      });
+
+      document.getElementById('status').innerText = "✅ Submitted successfully!";
+      document.getElementById('menuForm').reset();
+      document.getElementById('date').valueAsDate = new Date();
+    });
+  } catch (error) {
+    console.error(error);
+    document.getElementById('content').innerHTML = `<p>❌ Error during login: ${error.message}</p>`;
+  }
+}
+
 
     window.onload = init;
   </script>
