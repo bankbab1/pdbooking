@@ -2,511 +2,494 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Submit Food Menu</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f7f9fc;
-            color: #333;
-            padding: 2rem;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8" />
+  <title>Submit Food Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      padding: 2rem;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
 
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            max-width: 480px;
-            width: 100%;
-        }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      max-width: 480px;
+      width: 100%;
+    }
 
-        h2 {
-            margin-top: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            text-align: center;
-            color: #2c3e50;
-        }
+    h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      color: #2c3e50;
+    }
 
-        label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: 600;
-        }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
 
-        input[type="date"],
-        textarea {
-            width: 100%;
-            margin-top: 0.25rem;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            resize: vertical;
-        }
+    input[type="date"],
+    textarea {
+      width: 100%;
+      margin-top: 0.25rem;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      resize: vertical;
+    }
 
-        textarea {
-            height: 100px;
-        }
+    textarea {
+      height: 100px;
+    }
 
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.75rem;
-            background: #007bff;
-            color: white;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
 
-        button:hover:not(:disabled) {
-            background: #0056cc;
-        }
+    button:hover:not(:disabled) {
+      background: #0056cc;
+    }
 
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
 
-        #status {
-            margin-top: 1rem;
-            text-align: center;
-            font-weight: 600;
-            color: #28a745;
-        }
+    #status {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+      color: #28a745;
+    }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
 
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 1.5rem;
-            border-radius: 12px;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 1.5rem;
+      border-radius: 12px;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
 
-        .modal-content h3 {
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
 
-        .modal-buttons {
-            text-align: right;
-            margin-top: 1rem;
-        }
+    .modal-buttons {
+      text-align: right;
+      margin-top: 1rem;
+    }
 
-        .modal-buttons button {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            margin-left: 0.5rem;
-        }
-        .menu-header {
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
-  margin-bottom: 0.3rem;
-}
+    .modal-buttons button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
 
-.user-list {
-  margin-left: 1rem;
-  list-style: disc;
-  padding-left: 1rem;
-  display: none; /* default hidden */
-}
+    .menu-header {
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 0.3rem;
+    }
 
-        .btn-cancel {
-            background: #ccc;
-            color: #333;
-        }
+    .user-list {
+      margin-left: 1rem;
+      list-style: disc;
+      padding-left: 1rem;
+      display: none;
+      /* default hidden */
+    }
 
-        .btn-save {
-            background: #007bff;
-            color: white;
-        }
+    .btn-cancel {
+      background: #ccc;
+      color: #333;
+    }
 
-        .btn-save:hover {
-            background: #0056cc;
-        }
+    .btn-save {
+      background: #007bff;
+      color: white;
+    }
 
-        .btn-back {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-}
+    .btn-save:hover {
+      background: #0056cc;
+    }
 
-.btn-back:hover {
-  background-color: #0056b3;
-}
+    .btn-back {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
 
-        #latestMenuCard button {
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            background: #17a2b8;
-            border: none;
-            color: white;
-            transition: background 0.2s ease;
-        }
+    .btn-back:hover {
+      background-color: #0056b3;
+    }
 
-        #latestMenuCard button:hover {
-            background: #117a8b;
-        }
+    #latestMenuCard button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #17a2b8;
+      border: none;
+      color: white;
+      transition: background 0.2s ease;
+    }
 
-        #menuListContainer button {
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
+    #latestMenuCard button:hover {
+      background: #117a8b;
+    }
 
-#menuListContainer button:hover {
-  background: #1e7e34;
-}
+    #menuListContainer button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-    </style>
+    #menuListContainer button:hover {
+      background: #1e7e34;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container" id="content">
-        <p>Loading LINE profile...</p>
-    </div>
-    <span id="latestNickname" style="display: none;"></span>
+  <div class="container" id="content">
+    <p>Loading LINE profile...</p>
+  </div>
+  <span id="latestNickname" style="display: none;"></span>
 
-    <!-- Modal for Edit -->
-    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle"
+  <!-- Modal for Edit -->
+  <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle"
     aria-describedby="editModalDesc">
     <div class="modal-content">
-        <h3 id="editModalTitle">Edit Menu</h3>
+      <h3 id="editModalTitle">Edit Menu</h3>
 
-        <!-- Name input styled like textarea -->
-<label for="editNameInput">Name:</label>
-<input type="text" id="editNameInput" placeholder="Your Name"
-    style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc; box-sizing: border-box;" />
+      <!-- Name input styled like textarea -->
+      <label for="editNameInput">Name:</label>
+      <input type="text" id="editNameInput" placeholder="Your Name"
+        style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc; box-sizing: border-box;" />
 
 
-        <!-- ⬇️ Existing menu input -->
-        <label for="editMenuTextarea">Menu:</label>
-        <textarea id="editMenuTextarea" rows="5"
-            style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
+      <!-- ⬇️ Existing menu input -->
+      <label for="editMenuTextarea">Menu:</label>
+      <textarea id="editMenuTextarea" rows="5"
+        style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
 
-        <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <button id="saveEditBtn" class="btn-save" type="button">OK</button>
-            <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
-        </div>
-    </div>
-</div>
-
-    <!-- Modal for Follow Other User Menu -->
-<div id="followOtherUserMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="followModalTitle" aria-describedby="followModalDesc" style="display:none;">
-  <div class="modal-content">
-    <h3 id="followModalTitle">Follow Menu</h3>
-    <textarea id="followMenuTextarea" rows="5"
-      style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" readonly></textarea>
-    <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
-      <button id="okFollowModalBtn" class="btn-save" type="button">OK</button>
-      <button id="closeFollowModalBtn" class="btn-cancel" type="button">Cancel</button>
+      <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <button id="saveEditBtn" class="btn-save" type="button">OK</button>
+        <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Modal for Follow Other User Menu -->
+  <div id="followOtherUserMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="followModalTitle"
+    aria-describedby="followModalDesc" style="display:none;">
+    <div class="modal-content">
+      <h3 id="followModalTitle">Follow Menu</h3>
+      <textarea id="followMenuTextarea" rows="5"
+        style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" readonly></textarea>
+      <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <button id="okFollowModalBtn" class="btn-save" type="button">OK</button>
+        <button id="closeFollowModalBtn" class="btn-cancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
 
 
-    <!-- Confirm Submit Modal -->
-<div id="confirmModal" class="modal">
-  <div class="modal-content">
-    <h3>Confirm Submit Menu</h3>
-    <!--<p><strong>Menu:</strong> <span id="confirmMenuText"></span></p>-->
+  <!-- Confirm Submit Modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h3>Confirm Submit Menu</h3>
+      <!--<p><strong>Menu:</strong> <span id="confirmMenuText"></span></p>-->
       <label for="confirmMenuText"><strong>Menu:</strong></label>
-<textarea id="confirmMenuText"
-    style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;"
-    rows="4"></textarea>
-    <div class="modal-buttons">
+      <textarea id="confirmMenuText"
+        style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;"
+        rows="4"></textarea>
+      <div class="modal-buttons">
         <button id="confirmSubmitBtn" class="btn-save">Confirm</button>
-      <button id="cancelConfirmBtn" class="btn-cancel">Cancel</button>
+        <button id="cancelConfirmBtn" class="btn-cancel">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
 
 
 
-    <script>
-        const CLIENT_ID = '2007709795';
-        const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
-        const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/form.html';
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqXcJws4Z1V1oekILeZjNkBPOyJHJOVgUsTTzYUglmd00wbUwijgiRCEahYa00bI0M/exec';
+  <script>
+    const CLIENT_ID = '2007709795';
+    const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
+    const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/form.html';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqXcJws4Z1V1oekILeZjNkBPOyJHJOVgUsTTzYUglmd00wbUwijgiRCEahYa00bI0M/exec';
 
-        async function getAccessToken(code) {
-            const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    grant_type: "authorization_code",
-                    code,
-                    redirect_uri: REDIRECT_URI,
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET
-                })
-            });
-            return res.json();
-        }
+    async function getAccessToken(code) {
+      const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: REDIRECT_URI,
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET
+        })
+      });
+      return res.json();
+    }
 
-        async function getProfile(access_token) {
-            const res = await fetch("https://api.line.me/v2/profile", {
-                headers: { Authorization: "Bearer " + access_token }
-            });
-            return res.json();
-        }
+    async function getProfile(access_token) {
+      const res = await fetch("https://api.line.me/v2/profile", {
+        headers: { Authorization: "Bearer " + access_token }
+      });
+      return res.json();
+    }
 
-        async function fetchLastMenu(userId) {
-    try {
+    async function fetchLastMenu(userId) {
+      try {
         const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
         const res = await fetch(url);
         const data = await res.json();
 
         if (data.menu && data.menu.trim() !== '') {
-            document.getElementById("latestDate").innerText = data.submit_date || "-";
-            document.getElementById("latestMenu").innerText = data.menu;
+          document.getElementById("latestDate").innerText = data.submit_date || "-";
+          document.getElementById("latestMenu").innerText = data.menu;
 
-            // ✅ Store user's name (nickname) in a hidden span
-            //document.getElementById("latestNickname").innerText = data.user || "-";
-            document.getElementById("latestNickname").innerText = data.name || "-"; // ✅ Show nickname
+          // ✅ Store user's name (nickname) in a hidden span
+          //document.getElementById("latestNickname").innerText = data.user || "-";
+          document.getElementById("latestNickname").innerText = data.name || "-"; // ✅ Show nickname
 
         } else {
-            document.getElementById("latestDate").innerText = "-";
-            document.getElementById("latestMenu").innerText = "❌ No order yet";
-            document.getElementById("latestNickname").innerText = "-";
+          document.getElementById("latestDate").innerText = "-";
+          document.getElementById("latestMenu").innerText = "❌ No order yet";
+          document.getElementById("latestNickname").innerText = "-";
         }
 
         document.getElementById("latestMenuCard").style.display = "block";
-    } catch (err) {
+      } catch (err) {
         console.error("Error fetching last menu:", err);
-    }
-}
-
-
-        async function fetchTodayMenus() {
-  try {
-    const res = await fetch(SCRIPT_URL + "?action=todayMenus");
-    const data = await res.json();
-
-    if (!data || !data.length) {
-      document.getElementById("todayMenusCard").style.display = "none";
-      return;
+      }
     }
 
-    const container = document.getElementById("menuListContainer");
-    container.innerHTML = "";
 
-    data.forEach(item => {
-      const menuItem = document.createElement("div");
-      menuItem.className = "menu-item";
-      menuItem.style.marginBottom = "1rem";
+    async function fetchTodayMenus() {
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=todayMenus");
+        const data = await res.json();
 
-      const header = document.createElement("div");
-      header.className = "menu-header";
-      header.tabIndex = 0;
-      header.setAttribute("role", "button");
-      header.setAttribute("aria-expanded", "false");
-      header.style.cursor = "pointer";
-      header.style.fontWeight = "600";
-      header.textContent = `🍛 ${item.menu} (${item.count} user${item.count > 1 ? 's' : ''})`;
-
-
-      const userList = document.createElement("ul");
-      userList.className = "user-list";
-      userList.style.display = "none";
-      userList.style.marginLeft = "1rem";
-      userList.style.listStyle = "disc";
-
-      item.users.forEach(user => {
-        const li = document.createElement("li");
-        //li.textContent = user.user;  // username string
-        li.textContent = `${user.user} (${user.name || '-'})`;
-        userList.appendChild(li);
-      });
-
-      header.addEventListener("click", () => {
-        const expanded = header.getAttribute("aria-expanded") === "true";
-        header.setAttribute("aria-expanded", !expanded);
-        userList.style.display = expanded ? "none" : "block";
-      });
-
-      // Create Follow button
-      const followBtn = document.createElement("button");
-      followBtn.textContent = "Follow";
-      followBtn.style.marginTop = "0.5rem";
-      followBtn.style.padding = "0.4rem 0.8rem";
-      followBtn.style.background = "#28a745";
-      followBtn.style.color = "white";
-      followBtn.style.border = "none";
-      followBtn.style.borderRadius = "6px";
-      followBtn.style.fontWeight = "600";
-      followBtn.style.cursor = "pointer";
-
-      followBtn.addEventListener("mouseenter", () => followBtn.style.background = "#1e7e34");
-      followBtn.addEventListener("mouseleave", () => followBtn.style.background = "#28a745");
-
-      // (Optional) Add your follow logic here on click
-      followBtn.addEventListener("click", () => {
-  openFollowOtherUserMenuModal(item.menu, item.users);
-});
-
-
-      menuItem.appendChild(header);
-      menuItem.appendChild(userList);
-      menuItem.appendChild(followBtn);
-
-      container.appendChild(menuItem);
-    });
-
-    document.getElementById("todayMenusCard").style.display = "block";
-  } catch (err) {
-    console.error("Error fetching today's menus:", err);
-  }
-}
-
-
-        function openFollowOtherUserMenuModal(menu, users) {
-  const modal = document.getElementById("followOtherUserMenuModal");
-  const textarea = document.getElementById("followMenuTextarea");
-
-  // Build the text content listing users who chose this menu
-  let text = `Menu: ${menu}\n\nUsers:\n`;
-users.forEach(u => {
-  text += `- ${u.user} (${u.name || "-"})\n`;
-});
-
-
-  textarea.value = text;
-  modal.style.display = "block";
-}
-
-document.getElementById("closeFollowModalBtn").addEventListener("click", () => {
-  document.getElementById("followOtherUserMenuModal").style.display = "none";
-});
-        
-document.getElementById("okFollowModalBtn").addEventListener("click", () => {
-  const textarea = document.getElementById("followMenuTextarea");
-  const menuLines = textarea.value.trim().split("\n");
-  if (menuLines.length > 0 && menuLines[0].startsWith("Menu:")) {
-    const menuText = menuLines[0].replace("Menu:", "").trim();
-    const menuInput = document.getElementById("menu");
-    const nicknameInput = document.getElementById("nickname");
-
-    // ✅ Get name from current user's latestNickname (same as edit)
-    const latestNickname = document.getElementById("latestNickname").innerText;
-
-    // ✅ Set values
-    menuInput.value = menuText;
-    nicknameInput.value = latestNickname;
-
-    // Close modal
-    document.getElementById("followOtherUserMenuModal").style.display = "none";
-
-    // ✅ Trigger confirmation flow (now with filled nickname)
-    document.getElementById('menuForm').requestSubmit();
-  }
-});
-
-
-
-        
-// Close modal if user clicks outside the modal content area
-window.addEventListener("click", (e) => {
-  const modal = document.getElementById("followOtherUserMenuModal");
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-});
-
-
-        function isWithinOrderTime() {
-            const now = new Date();
-            const gmt7Offset = 7 * 60; // minutes
-            const localOffset = now.getTimezoneOffset(); // in minutes
-            const offsetDiff = gmt7Offset + localOffset;
-
-            now.setMinutes(now.getMinutes() + offsetDiff);
-
-            const hour = now.getHours();
-            const minutes = now.getMinutes();
-
-            // Block before 7 AM and after 6 PM
-            if (hour < 7 || hour >= 18) return false;
-
-            // Uncomment if you want to block a special time range
-            // if (hour === 14 && minutes >= 36 && minutes < 45) return false;
-
-            return true;
+        if (!data || !data.length) {
+          document.getElementById("todayMenusCard").style.display = "none";
+          return;
         }
 
-        async function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get("code");
+        const container = document.getElementById("menuListContainer");
+        container.innerHTML = "";
 
-            let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
-            let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
-            // ADD THIS BLOCK:
-    const restaurant = sessionStorage.getItem("restaurant");
-    if (!restaurant) {
-      document.getElementById('content').innerHTML = `
-        <p>❌ Restaurant not specified.</p>
-        <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
-      `;
-      return;
+        data.forEach(item => {
+          const menuItem = document.createElement("div");
+          menuItem.className = "menu-item";
+          menuItem.style.marginBottom = "1rem";
+
+          const header = document.createElement("div");
+          header.className = "menu-header";
+          header.tabIndex = 0;
+          header.setAttribute("role", "button");
+          header.setAttribute("aria-expanded", "false");
+          header.style.cursor = "pointer";
+          header.style.fontWeight = "600";
+          header.textContent = `🍛 ${item.menu} (${item.count} user${item.count > 1 ? 's' : ''})`;
+
+
+          const userList = document.createElement("ul");
+          userList.className = "user-list";
+          userList.style.display = "none";
+          userList.style.marginLeft = "1rem";
+          userList.style.listStyle = "disc";
+
+          item.users.forEach(user => {
+            const li = document.createElement("li");
+            //li.textContent = user.user;  // username string
+            li.textContent = `${user.user} (${user.name || '-'})`;
+            userList.appendChild(li);
+          });
+
+          header.addEventListener("click", () => {
+            const expanded = header.getAttribute("aria-expanded") === "true";
+            header.setAttribute("aria-expanded", !expanded);
+            userList.style.display = expanded ? "none" : "block";
+          });
+
+          // Create Follow button
+          const followBtn = document.createElement("button");
+          followBtn.textContent = "Follow";
+          followBtn.style.marginTop = "0.5rem";
+          followBtn.style.padding = "0.4rem 0.8rem";
+          followBtn.style.background = "#28a745";
+          followBtn.style.color = "white";
+          followBtn.style.border = "none";
+          followBtn.style.borderRadius = "6px";
+          followBtn.style.fontWeight = "600";
+          followBtn.style.cursor = "pointer";
+
+          followBtn.addEventListener("mouseenter", () => followBtn.style.background = "#1e7e34");
+          followBtn.addEventListener("mouseleave", () => followBtn.style.background = "#28a745");
+
+          // (Optional) Add your follow logic here on click
+          followBtn.addEventListener("click", () => {
+            openFollowOtherUserMenuModal(item.menu, item.users);
+          });
+
+
+          menuItem.appendChild(header);
+          menuItem.appendChild(userList);
+          menuItem.appendChild(followBtn);
+
+          container.appendChild(menuItem);
+        });
+
+        document.getElementById("todayMenusCard").style.display = "block";
+      } catch (err) {
+        console.error("Error fetching today's menus:", err);
+      }
     }
-    
 
-            if (!profile || !tokenData) {
-  if (!code) {
-    document.getElementById('content').innerHTML = `
-      <p>❌ LINE login failed. No code provided.</p>
-      <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-    `;
-    return;
-  }
 
-// ✅ ⬇️ ADD THIS BLOCK HERE
+    function openFollowOtherUserMenuModal(menu, users) {
+      const modal = document.getElementById("followOtherUserMenuModal");
+      const textarea = document.getElementById("followMenuTextarea");
+
+      // Build the text content listing users who chose this menu
+      let text = `Menu: ${menu}\n\nUsers:\n`;
+      users.forEach(u => {
+        text += `- ${u.user} (${u.name || "-"})\n`;
+      });
+
+
+      textarea.value = text;
+      modal.style.display = "block";
+    }
+
+    document.getElementById("closeFollowModalBtn").addEventListener("click", () => {
+      document.getElementById("followOtherUserMenuModal").style.display = "none";
+    });
+
+    document.getElementById("okFollowModalBtn").addEventListener("click", () => {
+      const textarea = document.getElementById("followMenuTextarea");
+      const menuLines = textarea.value.trim().split("\n");
+      if (menuLines.length > 0 && menuLines[0].startsWith("Menu:")) {
+        const menuText = menuLines[0].replace("Menu:", "").trim();
+        const menuInput = document.getElementById("menu");
+        const nicknameInput = document.getElementById("nickname");
+
+        // ✅ Get name from current user's latestNickname (same as edit)
+        const latestNickname = document.getElementById("latestNickname").innerText;
+
+        // ✅ Set values
+        menuInput.value = menuText;
+        nicknameInput.value = latestNickname;
+
+        // Close modal
+        document.getElementById("followOtherUserMenuModal").style.display = "none";
+
+        // ✅ Trigger confirmation flow (now with filled nickname)
+        document.getElementById('menuForm').requestSubmit();
+      }
+    });
+
+
+
+
+    // Close modal if user clicks outside the modal content area
+    window.addEventListener("click", (e) => {
+      const modal = document.getElementById("followOtherUserMenuModal");
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+
+
+    function isWithinOrderTime() {
+      const now = new Date();
+      const gmt7Offset = 7 * 60; // minutes
+      const localOffset = now.getTimezoneOffset(); // in minutes
+      const offsetDiff = gmt7Offset + localOffset;
+
+      now.setMinutes(now.getMinutes() + offsetDiff);
+
+      const hour = now.getHours();
+      const minutes = now.getMinutes();
+
+      // Block before 7 AM and after 6 PM
+      if (hour < 7 || hour >= 18) return false;
+
+      // Uncomment if you want to block a special time range
+      // if (hour === 14 && minutes >= 36 && minutes < 45) return false;
+
+      return true;
+    }
+
+    async function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+
+  let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
+  let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
   const restaurant = sessionStorage.getItem("restaurant");
+
+  // ✅ Restaurant required
   if (!restaurant) {
     document.getElementById('content').innerHTML = `
       <p>❌ Restaurant not specified.</p>
@@ -515,48 +498,58 @@ window.addEventListener("click", (e) => {
     return;
   }
 
-  // ✅ You can also show restaurant name
-  console.log("Restaurant:", restaurant);
-  try {
-    tokenData = await getAccessToken(code);
-    if (!tokenData.access_token) {
-      document.getElementById('content').innerHTML = `
-        <p>❌ Failed to get access token.</p>
-        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-      `;
-      return;
-    }
-
-    profile = await getProfile(tokenData.access_token);
-    if (!profile.displayName) {
-      document.getElementById('content').innerHTML = `
-        <p>❌ Failed to get profile displayName.</p>
-        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-      `;
-      return;
-    }
-
-    sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-    sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-    window.history.replaceState({}, document.title, REDIRECT_URI);
-  } catch (error) {
-    console.error(error);
+  // ✅ If session missing and no code
+  if ((!profile || !tokenData) && !code) {
     document.getElementById('content').innerHTML = `
-      <p>❌ Error during login: ${error.message}</p>
+      <p>❌ LINE login failed. No code provided.</p>
       <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
     `;
     return;
   }
-}
 
+  // ✅ If session missing but have code, try login
+  if ((!profile || !tokenData) && code) {
+    console.log("Restaurant:", restaurant); // optional
+    try {
+      tokenData = await getAccessToken(code);
+      if (!tokenData.access_token) {
+        document.getElementById('content').innerHTML = `
+          <p>❌ Failed to get access token.</p>
+          <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+        `;
+        return;
+      }
 
-            const content = document.getElementById('content');
-            content.innerHTML = `
-              <div style="text-align:center; margin-bottom: 1rem;">
-                <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
-              </div>
-              <h2>👋 Hello, ${profile.displayName}</h2>
-              <h3>🍴 Restaurant: <strong>${restaurant}</strong></h3>
+      profile = await getProfile(tokenData.access_token);
+      if (!profile.displayName) {
+        document.getElementById('content').innerHTML = `
+          <p>❌ Failed to get profile displayName.</p>
+          <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+        `;
+        return;
+      }
+
+      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+      window.history.replaceState({}, document.title, REDIRECT_URI);
+    } catch (error) {
+      console.error(error);
+      document.getElementById('content').innerHTML = `
+        <p>❌ Error during login: ${error.message}</p>
+        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+      `;
+      return;
+    }
+  }
+
+  // ✅ All ready — render content
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div style="text-align:center; margin-bottom: 1rem;">
+      <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
+    </div>
+    <h2>👋 Hello, ${profile.displayName}</h2>
+    <h3>🍴 Restaurant: <strong>${restaurant}</strong></h3>
 
               <!--
 <form id="menuForm">
@@ -609,195 +602,202 @@ window.addEventListener("click", (e) => {
 
             `;
 
-            const dateInput = document.getElementById('date');
-            dateInput.valueAsDate = new Date();
-            dateInput.disabled = true;
+      const dateInput = document.getElementById('date');
+      dateInput.valueAsDate = new Date();
+      dateInput.disabled = true;
 
-            const submitButton = document.querySelector('#menuForm button');
+      const submitButton = document.querySelector('#menuForm button');
 
-            if (!isWithinOrderTime()) {
-    // Disable all buttons except Cancel buttons
-    document.querySelectorAll("button").forEach(btn => {
-        if (!btn.classList.contains("btn-cancel")) {
+      if (!isWithinOrderTime()) {
+        // Disable all buttons except Cancel buttons
+        document.querySelectorAll("button").forEach(btn => {
+          if (!btn.classList.contains("btn-cancel")) {
             btn.disabled = true;
             btn.style.background = '#ccc';
             btn.style.cursor = 'not-allowed';
             btn.title = "⏰ Ordering is disabled outside 7:00 AM – 6:00 PM";
-        } else {
+          } else {
             // Enable Cancel buttons so user can close modals
             btn.disabled = false;
             btn.style.background = '';
             btn.style.cursor = 'pointer';
             btn.title = '';
-        }
-    });
+          }
+        });
 
-    // Block submit button click with a friendly alert
-    submitButton.onmousedown = function () {
-        alert("⏰ It's not available to order now.\nPlease come back between 7:00 AM – 6:00 PM.");
-    };
+        // Block submit button click with a friendly alert
+        submitButton.onmousedown = function () {
+          alert("⏰ It's not available to order now.\nPlease come back between 7:00 AM – 6:00 PM.");
+        };
 
-    const warning = document.createElement("p");
-    warning.textContent = "⏰ Ordering is only available from 7:00 AM to 6:00 PM.";
-    warning.style.color = "red";
-    warning.style.fontWeight = "bold";
-    warning.style.marginBottom = "1rem";
-    document.getElementById("menuForm").before(warning);
-}
-
-
-
-            fetchLastMenu(profile.userId);
-            await fetchTodayMenus(); // ⬅️ Add this here
-
-
-            // EDIT MODAL LOGIC
-            const editModal = document.getElementById('editModal');
-            const editTextarea = document.getElementById('editMenuTextarea');
-            const cancelEditBtn = document.getElementById('cancelEditBtn');
-            const saveEditBtn = document.getElementById('saveEditBtn');
-
-            document.getElementById('editMenuBtn').addEventListener('click', () => {
-    // Read name and menu from the visible card
-    const latestNickname = document.getElementById('latestNickname').innerText;
-    const latestMenu = document.getElementById('latestMenu').innerText;
-
-    // Set values into modal inputs
-    document.getElementById('editNameInput').value = latestNickname;
-    document.getElementById('editMenuTextarea').value = latestMenu;
-
-    // Show modal and focus textarea
-    editModal.style.display = 'block';
-    editTextarea.focus();
-});
-
-
-            // Confirm Submit Modal Logic
-const confirmModal = document.getElementById('confirmModal');
-const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
-const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
-
-cancelConfirmBtn.addEventListener('click', () => {
-    confirmModal.style.display = 'none';
-});
-
-confirmSubmitBtn.addEventListener('click', () => {
-    confirmModal.style.display = 'none';
-
-    const date = document.getElementById('date').value;
-    const menu = document.getElementById('menu').value;
-    const nickname = document.getElementById('nickname').value;
-
-    const formData = new URLSearchParams();
-formData.append("userId", profile.userId);
-formData.append("displayName", profile.displayName);
-formData.append("nickname", nickname);
-formData.append("date", date);
-formData.append("menu", menu);
-
-fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors', // optional but common with Apps Script CORS
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        action: "submitMenu",  // <-- this tells the script to call submitMenu()
-        userId: profile.userId,
-        displayName: profile.displayName,
-        nickname,
-        date,
-        menu
-    })
-})
-.then(() => {
-    document.getElementById('status').innerText = "✅ Submitted successfully!";
-    document.getElementById('menuForm').reset();
-    document.getElementById('date').valueAsDate = new Date();
-    document.getElementById("latestDate").innerText = date;
-    document.getElementById("latestMenu").innerText = menu;
-    document.getElementById("latestNickname").innerText = nickname;
-    document.getElementById("latestMenuCard").style.display = "block";
-})
-.catch((err) => {
-    console.error("❌ Failed to submit menu:", err);
-    alert("Failed to submit your menu. Please try again.");
-});
+        const warning = document.createElement("p");
+        warning.textContent = "⏰ Ordering is only available from 7:00 AM to 6:00 PM.";
+        warning.style.color = "red";
+        warning.style.fontWeight = "bold";
+        warning.style.marginBottom = "1rem";
+        document.getElementById("menuForm").before(warning);
+      }
 
 
 
-    document.getElementById('status').innerText = "✅ Submitted successfully!";
-    document.getElementById('menuForm').reset();
-
-    const dateInput = document.getElementById('date');
-    dateInput.valueAsDate = new Date();
-    dateInput.disabled = true;
-
-    // Update "Your Today Menu" card display — including name!
-    document.getElementById("latestDate").innerText = date;
-    document.getElementById("latestMenu").innerText = menu;
-    document.getElementById("latestNickname").innerText = nickname;  // <---- Add this line
-    document.getElementById("latestMenuCard").style.display = "block";
-});
+      fetchLastMenu(profile.userId);
+      await fetchTodayMenus(); // ⬅️ Add this here
 
 
-// Close modal if clicking outside
-window.addEventListener('click', (e) => {
-    if (e.target === confirmModal) {
+      // EDIT MODAL LOGIC
+      const editModal = document.getElementById('editModal');
+      const editTextarea = document.getElementById('editMenuTextarea');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+      const saveEditBtn = document.getElementById('saveEditBtn');
+
+      document.getElementById('editMenuBtn').addEventListener('click', () => {
+        // Read name and menu from the visible card
+        const latestNickname = document.getElementById('latestNickname').innerText;
+        const latestMenu = document.getElementById('latestMenu').innerText;
+
+        // Set values into modal inputs
+        document.getElementById('editNameInput').value = latestNickname;
+        document.getElementById('editMenuTextarea').value = latestMenu;
+
+        // Show modal and focus textarea
+        editModal.style.display = 'block';
+        editTextarea.focus();
+      });
+
+
+      // Confirm Submit Modal Logic
+      const confirmModal = document.getElementById('confirmModal');
+      const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+      const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+
+      cancelConfirmBtn.addEventListener('click', () => {
         confirmModal.style.display = 'none';
-    }
-});
+      });
 
-            cancelEditBtn.addEventListener('click', () => {
-                editModal.style.display = 'none';
-            });
+      confirmSubmitBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
 
-            saveEditBtn.addEventListener('click', () => {
-    const newMenu = editTextarea.value.trim();
-    const newName = document.getElementById('editNameInput').value.trim();
-
-    if (!newMenu) {
-        alert('Menu cannot be empty!');
-        return;
-    }
-
-    if (!newName) {
-        alert('Name cannot be empty!');
-        return;
-    }
-
-    // ✅ Update the main form fields before submitting
-    document.getElementById('menu').value = newMenu;
-    document.getElementById('nickname').value = newName;
-
-    editModal.style.display = 'none';
-
-    // ✅ Submit form programmatically
-    document.getElementById('menuForm').requestSubmit();
-});
-
-
-
-            document.getElementById('menuForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const nickname = document.getElementById('nickname').value.trim();
-    const menuText = document.getElementById('menu').value.trim();
-                if (!nickname) {
-        alert("Name cannot be empty.");
-        return;
-    }
-    if (!menuText) {
-        alert("Menu cannot be empty.");
-        return;
-    }
-
-    document.getElementById('confirmMenuText').innerText = menuText;
-    document.getElementById('confirmModal').style.display = 'block';
-});
-
-
+        // 🔐 Prevent undefined user submission
+        if (!profile || !profile.userId || profile.userId === "undefined") {
+          alert("❌ LINE session expired. Please re-login.");
+          location.href = "https://bankbab1.github.io/pdbooking/";
+          return;
         }
 
-        window.onload = init;
-    </script>
+        const date = document.getElementById('date').value;
+        const menu = document.getElementById('menu').value;
+        const nickname = document.getElementById('nickname').value;
+
+        const formData = new URLSearchParams();
+        formData.append("userId", profile.userId);
+        formData.append("displayName", profile.displayName);
+        formData.append("nickname", nickname);
+        formData.append("date", date);
+        formData.append("menu", menu);
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // optional but common with Apps Script CORS
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: "submitMenu",  // <-- this tells the script to call submitMenu()
+            userId: profile.userId,
+            displayName: profile.displayName,
+            nickname,
+            date,
+            menu
+          })
+        })
+          .then(() => {
+            document.getElementById('status').innerText = "✅ Submitted successfully!";
+            document.getElementById('menuForm').reset();
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById("latestDate").innerText = date;
+            document.getElementById("latestMenu").innerText = menu;
+            document.getElementById("latestNickname").innerText = nickname;
+            document.getElementById("latestMenuCard").style.display = "block";
+          })
+          .catch((err) => {
+            console.error("❌ Failed to submit menu:", err);
+            alert("Failed to submit your menu. Please try again.");
+          });
+
+
+
+        document.getElementById('status').innerText = "✅ Submitted successfully!";
+        document.getElementById('menuForm').reset();
+
+        const dateInput = document.getElementById('date');
+        dateInput.valueAsDate = new Date();
+        dateInput.disabled = true;
+
+        // Update "Your Today Menu" card display — including name!
+        document.getElementById("latestDate").innerText = date;
+        document.getElementById("latestMenu").innerText = menu;
+        document.getElementById("latestNickname").innerText = nickname;  // <---- Add this line
+        document.getElementById("latestMenuCard").style.display = "block";
+      });
+
+
+      // Close modal if clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+          confirmModal.style.display = 'none';
+        }
+      });
+
+      cancelEditBtn.addEventListener('click', () => {
+        editModal.style.display = 'none';
+      });
+
+      saveEditBtn.addEventListener('click', () => {
+        const newMenu = editTextarea.value.trim();
+        const newName = document.getElementById('editNameInput').value.trim();
+
+        if (!newMenu) {
+          alert('Menu cannot be empty!');
+          return;
+        }
+
+        if (!newName) {
+          alert('Name cannot be empty!');
+          return;
+        }
+
+        // ✅ Update the main form fields before submitting
+        document.getElementById('menu').value = newMenu;
+        document.getElementById('nickname').value = newName;
+
+        editModal.style.display = 'none';
+
+        // ✅ Submit form programmatically
+        document.getElementById('menuForm').requestSubmit();
+      });
+
+
+
+      document.getElementById('menuForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const nickname = document.getElementById('nickname').value.trim();
+        const menuText = document.getElementById('menu').value.trim();
+        if (!nickname) {
+          alert("Name cannot be empty.");
+          return;
+        }
+        if (!menuText) {
+          alert("Menu cannot be empty.");
+          return;
+        }
+
+        document.getElementById('confirmMenuText').innerText = menuText;
+        document.getElementById('confirmModal').style.display = 'block';
+      });
+
+
+    }
+
+    window.onload = init;
+  </script>
 </body>
 
 </html>
