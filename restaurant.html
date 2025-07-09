@@ -177,7 +177,9 @@
   const now = new Date();
   const hour = now.getHours();
   const waitMessage = document.getElementById('waitMessage');
-  const submitBtn = document.getElementById('submitBtn');
+  
+  // Select the Submit button inside the form
+  const submitBtn = document.querySelector('#formSection form button[type="submit"]');
 
   if (!isAuthorized && hour < 18) {
     waitMessage.style.display = 'block';
@@ -187,6 +189,7 @@
     submitBtn.disabled = false; // Enable the submit button
   }
 }
+
 
 
   function submitRestaurant(event) {
