@@ -599,7 +599,8 @@ window.addEventListener("click", (e) => {
 
     // ✅ Set current values into the modal
     document.getElementById('editMenuTextarea').value = document.getElementById('latestMenu').innerText;
-    document.getElementById('editNameInput').value = latestName;
+    document.getElementById('editNameInput').value = document.getElementById('latestName').innerText;
+
 
     editModal.style.display = 'block';
     document.getElementById('editMenuTextarea').focus();
