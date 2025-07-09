@@ -123,86 +123,156 @@
   </div>
 
   <script>
-    const CLIENT_ID = '2007709795';
-    const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
-    const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/restaurant.html';
+  const CLIENT_ID = '2007709795';
+  const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
+  const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/restaurant.html';
 
-    async function getAccessToken(code) {
-      const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
+  async function getAccessToken(code) {
+    const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: REDIRECT_URI,
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET
+      })
+    });
+    return res.json();
+  }
+
+  async function getProfile(access_token) {
+    const res = await fetch("https://api.line.me/v2/profile", {
+      headers: { Authorization: "Bearer " + access_token }
+    });
+    return res.json();
+  }
+
+  async function initLogin() {
+    const code = new URLSearchParams(window.location.search).get("code");
+    const container = document.getElementById("container");
+
+    if (!code) {
+      container.innerHTML = `<p>❌ LINE login failed. No code provided.</p>
+        <a href="index.html" class="btn">🔙 Back to Home</a>`;
+      return;
+    }
+
+    try {
+      const tokenData = await getAccessToken(code);
+      const profile = await getProfile(tokenData.access_token);
+
+      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+    } catch (err) {
+      container.innerHTML = `<p>❌ Error: ${err.message}</p>
+        <a href="index.html" class="btn">🔙 Back to Home</a>`;
+    }
+  }
+
+  function handleChoice(isAuthorized) {
+    document.getElementById('formSection').style.display = 'block';
+    const now = new Date();
+    const hour = now.getHours();
+    const waitMessage = document.getElementById('waitMessage');
+
+    if (!isAuthorized && hour < 14) {
+      waitMessage.style.display = 'block';
+    } else {
+      waitMessage.style.display = 'none';
+    }
+  }
+
+  async function submitRestaurant(event) {
+    event.preventDefault();
+    const restaurantName = document.getElementById('restaurantInput').value.trim();
+
+    if (!restaurantName) {
+      alert('Please enter a restaurant name.');
+      return;
+    }
+
+    const tokenData = JSON.parse(sessionStorage.getItem('lineToken') || '{}');
+    const profile = JSON.parse(sessionStorage.getItem('lineProfile') || '{}');
+
+    const postData = {
+      action: 'submitRestaurant',
+      userLineToken: tokenData.access_token || '',
+      userProfileName: profile.displayName || profile.name || '',
+      restaurantName: restaurantName
+    };
+
+    try {
+      const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          grant_type: "authorization_code",
-          code,
-          redirect_uri: REDIRECT_URI,
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(postData)
       });
-      return res.json();
-    }
+      const result = await response.json();
 
-    async function getProfile(access_token) {
-      const res = await fetch("https://api.line.me/v2/profile", {
-        headers: { Authorization: "Bearer " + access_token }
-      });
-      return res.json();
-    }
-
-    async function initLogin() {
-      const code = new URLSearchParams(window.location.search).get("code");
-      const container = document.getElementById("container");
-
-      if (!code) {
-        container.innerHTML = `<p>❌ LINE login failed. No code provided.</p>
-          <a href="index.html" class="btn">🔙 Back to Home</a>`;
-        return;
-      }
-
-      try {
-        const tokenData = await getAccessToken(code);
-        const profile = await getProfile(tokenData.access_token);
-
-        // Save to sessionStorage for use in form.html
-        sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-        sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-
-      } catch (err) {
-        container.innerHTML = `<p>❌ Error: ${err.message}</p>
-          <a href="index.html" class="btn">🔙 Back to Home</a>`;
-      }
-    }
-
-    function handleChoice(isAuthorized) {
-      document.getElementById('formSection').style.display = 'block';
-      const now = new Date();
-      const hour = now.getHours();
-      const waitMessage = document.getElementById('waitMessage');
-
-      if (!isAuthorized && hour < 14) {
-        waitMessage.style.display = 'block';
+      if (result.success) {
+        alert('Restaurant submitted successfully!');
+        goToForm();
       } else {
-        waitMessage.style.display = 'none';
+        alert('Failed to submit restaurant. Please try again.');
       }
+    } catch (err) {
+      alert('Error submitting restaurant: ' + err.message);
     }
+  }
 
-    function submitRestaurant(event) {
-      event.preventDefault();
-      const restaurant = document.getElementById('restaurantInput').value.trim();
-      if (restaurant) {
-        sessionStorage.setItem('restaurant', restaurant);
-        window.location.href = 'form.html'; // go to main form
+  async function checkTodaysRestaurant() {
+    try {
+      const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?action=getTodaysRestaurant");
+      const data = await response.json();
+
+      const container = document.getElementById('container');
+
+      if (data && data.restaurantName) {
+        container.innerHTML = `
+          <h2>🍽️ Today's restaurant is already set</h2>
+          <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
+          <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
+          <p><strong>First submitted at:</strong> ${data.first_submit}</p>
+          <button class="btn btn-yes" onclick="goToForm()">Go to Form</button>
+        `;
+        return true;
       }
+      return false;
+    } catch (err) {
+      console.error("Error fetching today's restaurant:", err);
+      return false;
     }
+  }
 
-    // Set today's date
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
+  function goToForm() {
+    window.location.href = 'form.html';
+  }
 
-    window.onload = initLogin;
-  </script>
+  async function initPage() {
+    const restaurantExists = await checkTodaysRestaurant();
+
+    if (!restaurantExists) {
+      document.querySelector('.button-group').style.display = 'flex';
+      document.getElementById('formSection').style.display = 'none';
+
+      document.querySelector('form').addEventListener('submit', submitRestaurant);
+    }
+  }
+
+  window.onload = async () => {
+    await initLogin();
+    await initPage();
+  };
+
+  // Set today's date in dd/mm/yyyy
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = today.getFullYear();
+  document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
+</script>
+
 </body>
 </html>
