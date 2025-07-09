@@ -173,17 +173,21 @@
   }
 
   function handleChoice(isAuthorized) {
-    document.getElementById('formSection').style.display = 'block';
-    const now = new Date();
-    const hour = now.getHours();
-    const waitMessage = document.getElementById('waitMessage');
+  document.getElementById('formSection').style.display = 'block';
+  const now = new Date();
+  const hour = now.getHours();
+  const waitMessage = document.getElementById('waitMessage');
+  const submitBtn = document.getElementById('submitBtn');
 
-    if (!isAuthorized && hour < 14) {
-      waitMessage.style.display = 'block';
-    } else {
-      waitMessage.style.display = 'none';
-    }
+  if (!isAuthorized && hour < 18) {
+    waitMessage.style.display = 'block';
+    submitBtn.disabled = true;  // Disable the submit button
+  } else {
+    waitMessage.style.display = 'none';
+    submitBtn.disabled = false; // Enable the submit button
   }
+}
+
 
   function submitRestaurant(event) {
     event.preventDefault();
