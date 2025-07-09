@@ -264,6 +264,26 @@
     });
   }
 
+    function formatDateTimeWithGMT7(isoString) {
+  if (!isoString) return '';
+
+  const dateObj = new Date(isoString);
+
+  // Get date as YYYY-MM-DD
+  const datePart = isoString.substring(0, 10);
+
+  // Convert to GMT+7 time by adding 7 hours
+  // Note: dateObj is in UTC internally, so we add 7 hours to get GMT+7
+  const gmt7Time = new Date(dateObj.getTime() + 7 * 60 * 60 * 1000);
+
+  // Format time as HH:mm:ss
+  const pad = (n) => n.toString().padStart(2, '0');
+  const timePart = `${pad(gmt7Time.getUTCHours())}:${pad(gmt7Time.getUTCMinutes())}:${pad(gmt7Time.getUTCSeconds())}`;
+
+  return `${datePart} Time: ${timePart}`;
+}
+
+    
   async function initPage() {
     try {
       const data = await checkTodaysRestaurant();
@@ -275,7 +295,8 @@
   <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
   <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
   <!-- <p><strong>First submitted at:</strong> ${data.first_submit}</p> -->
-  <p><strong>First submitted at:</strong> ${(data.first_submit || '').substring(0, 10)}</p>
+  <!-- <p><strong>First submitted at:</strong> ${(data.first_submit || '').substring(0, 10)}</p> -->
+  <p><strong>First submitted at:</strong> ${formatDateTimeWithGMT7(data.first_submit)}</p>
   <button class="btn btn-yes" onclick="proceedToForm('${data.restaurantName}')">🍱 Make Order</button>
 
 `;
