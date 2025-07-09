@@ -106,6 +106,18 @@
   cursor: not-allowed;
   opacity: 0.7;
 }
+  .btn-view-menu {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: #6c757d; /* gray */
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
   </style>
 </head>
@@ -130,6 +142,8 @@
       <input type="text" id="restaurantInput" placeholder="Restaurant name" required />
       <button type="submit">✅ Submit</button>
     </form>
+      <button id="viewMenuBtn" class="btn btn-view-menu" onclick="proceedToFormViewOnly()">👀 View My Menu</button>
+
   </div>
 </div>
 
@@ -191,27 +205,27 @@
   const waitMessage = document.getElementById('waitMessage');
   const submitBtn = document.querySelector('#formSection form button[type="submit"]');
   const restaurantInput = document.getElementById('restaurantInput');
+  const viewMenuBtn = document.getElementById('viewMenuBtn');
 
-  // Check time window
   const withinOrderTime = isWithinOrderTime();
 
   if (!withinOrderTime) {
-    // Outside allowed time, disable submit + input and show a clear message
     waitMessage.style.display = 'block';
     waitMessage.innerHTML = `⏳ Submissions are not allowed before 07:00 or after 18:00.<br>Please come back during ordering hours.`;
     submitBtn.disabled = true;
     restaurantInput.disabled = true;
+    viewMenuBtn.style.display = 'block';  // Show View My Menu button
   } else if (!isAuthorized && hour < 14) {
-    // Original wait-until-14:00 logic
     waitMessage.style.display = 'block';
     waitMessage.innerHTML = `⏳ Please wait until 14:00.<br>If no one specifies the restaurant by 14:00, you can return to set it.`;
     submitBtn.disabled = true;
     restaurantInput.disabled = true;
+    viewMenuBtn.style.display = 'none';  // Hide View My Menu button
   } else {
-    // Allowed to submit
     waitMessage.style.display = 'none';
     submitBtn.disabled = false;
     restaurantInput.disabled = false;
+    viewMenuBtn.style.display = 'none';  // Hide View My Menu button
   }
 }
 
@@ -335,6 +349,12 @@
 
   return `${datePart} ⏰ ${timePart}`;
 
+}
+
+    function proceedToFormViewOnly() {
+  // You can optionally set a flag in sessionStorage or query param to mark this as view-only
+  sessionStorage.setItem("viewOnly", "true");
+  window.location.href = "form.html";
 }
 
     
