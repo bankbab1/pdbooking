@@ -351,11 +351,26 @@
 
 }
 
-    function proceedToFormViewOnly() {
-  // You can optionally set a flag in sessionStorage or query param to mark this as view-only
+    function isProfileValid() {
+  const profile = JSON.parse(sessionStorage.getItem('lineProfile') || '{}');
+  const name = profile.displayName || profile.name || '';
+  if (!name || name === 'undefined') {
+    return false;
+  }
+  return true;
+}
+
+    
+  function proceedToFormViewOnly() {
+  if (!isProfileValid()) {
+    alert("Your session is invalid or expired. Please log in again.");
+    window.location.href = "index.html";
+    return;
+  }
   sessionStorage.setItem("viewOnly", "true");
   window.location.href = "form.html";
 }
+
 
     
   async function initPage() {
@@ -385,18 +400,30 @@
   }
 
   window.onload = async () => {
-    await initLogin();
-    await initPage();
+  await initLogin();
 
-    // Set today's date in dd/mm/yyyy
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
-  };
+  if (!isProfileValid()) {
+    alert("Your session is invalid or expired. Please log in again.");
+    window.location.href = "index.html";  // or your login page URL
+    return;
+  }
+
+  await initPage();
+
+  // Set today's date in dd/mm/yyyy
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = today.getFullYear();
+  document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
+};
 
   function proceedToForm(restaurantName) {
+  if (!isProfileValid()) {
+    alert("Your session is invalid or expired. Please log in again.");
+    window.location.href = "index.html";
+    return;
+  }
   sessionStorage.setItem("restaurant", restaurantName);
   window.location.href = "form.html";
 }
