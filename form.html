@@ -558,7 +558,7 @@ window.addEventListener("click", (e) => {
               <p id="status"></p>
 
               <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
-  <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
+  <h3 style="margin-top: 0;">📦 Your Today Menu</h3>
   <p><strong>Date:</strong> <span id="latestDate">-</span></p>
   <p><strong>Name:</strong> <span id="latestNickname">-</span></p> <!-- add this line -->
   <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
@@ -567,7 +567,7 @@ window.addEventListener("click", (e) => {
 
 
               <div id="todayMenusCard" style="display:none; margin-top:2rem; padding:1rem; border-radius:12px; background:#eef3f9; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-  <h3>📋 Today's Menus by Users</h3>
+  <h3>📋 Today's Menus by Friends</h3>
   <div id="menuListContainer"></div>
 </div>
 
@@ -674,7 +674,7 @@ confirmSubmitBtn.addEventListener('click', () => {
     dateInput.valueAsDate = new Date();
     dateInput.disabled = true;
 
-    // Update "Your Last Menu" card display — including name!
+    // Update "Your Today Menu" card display — including name!
     document.getElementById("latestDate").innerText = date;
     document.getElementById("latestMenu").innerText = menu;
     document.getElementById("latestNickname").innerText = nickname;  // <---- Add this line
