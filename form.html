@@ -483,68 +483,58 @@
 
     async function init() {
       const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
+      const code = urlParams.get("code");
 
-  let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
-  let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
-  const restaurant = sessionStorage.getItem("restaurant");
+      let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
+      let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
+      const restaurant = sessionStorage.getItem("restaurant");
 
-  // ✅ Restaurant required
-  if (!restaurant) {
-    document.getElementById('content').innerHTML = `
-      <p>❌ Restaurant not specified.</p>
-      <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
-    `;
-    return;
-  }
+      // ✅ Restaurant required
+      if (!restaurant) {
+        document.getElementById('content').innerHTML = `
+    <p>❌ Restaurant not specified.</p>
+    <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
+  `;
+        return;
+      }
 
-  // ✅ If session missing and no code
-  if ((!profile || !tokenData) && !code) {
-    document.getElementById('content').innerHTML = `
-      <p>❌ LINE login failed. No code provided.</p>
+      // ✅ LINE session missing and no code → fail
+      if ((!profile || !tokenData) && !code) {
+        document.getElementById('content').innerHTML = `
+    <p>❌ LINE login failed. No code provided.</p>
+    <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+  `;
+        return;
+      }
+
+      // ✅ LINE session missing, but we have code → try login
+      if ((!profile || !tokenData) && code) {
+        console.log("Restaurant:", restaurant); // optional debug
+        try {
+          tokenData = await getAccessToken(code);
+          if (!tokenData.access_token) throw new Error("Access token missing");
+
+          profile = await getProfile(tokenData.access_token);
+          if (!profile.displayName) throw new Error("Profile displayName missing");
+
+          sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+          sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+
+          window.history.replaceState({}, document.title, REDIRECT_URI);
+        } catch (error) {
+          console.error(error);
+          document.getElementById('content').innerHTML = `
+      <p>❌ Error during login: ${error.message}</p>
       <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
     `;
-    return;
-  }
-
-  // ✅ If session missing but have code, try login
-  if ((!profile || !tokenData) && code) {
-    console.log("Restaurant:", restaurant); // optional
-    try {
-      tokenData = await getAccessToken(code);
-      if (!tokenData.access_token) {
-        document.getElementById('content').innerHTML = `
-          <p>❌ Failed to get access token.</p>
-          <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-        `;
-        return;
+          return;
+        }
       }
 
-      profile = await getProfile(tokenData.access_token);
-      if (!profile.displayName) {
-        document.getElementById('content').innerHTML = `
-          <p>❌ Failed to get profile displayName.</p>
-          <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-        `;
-        return;
-      }
 
-      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-      window.history.replaceState({}, document.title, REDIRECT_URI);
-    } catch (error) {
-      console.error(error);
-      document.getElementById('content').innerHTML = `
-        <p>❌ Error during login: ${error.message}</p>
-        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-      `;
-      return;
-    }
-  }
-
-  // ✅ All ready — render content
-  const content = document.getElementById('content');
-  content.innerHTML = `
+      // ✅ All ready — render content
+      const content = document.getElementById('content');
+      content.innerHTML = `
     <div style="text-align:center; margin-bottom: 1rem;">
       <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
     </div>
