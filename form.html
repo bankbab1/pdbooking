@@ -426,17 +426,23 @@ document.getElementById("okFollowModalBtn").addEventListener("click", () => {
   if (menuLines.length > 0 && menuLines[0].startsWith("Menu:")) {
     const menuText = menuLines[0].replace("Menu:", "").trim();
     const menuInput = document.getElementById("menu");
+    const nicknameInput = document.getElementById("nickname");
 
-    // Set menu value
+    // ✅ Get name from current user's latestNickname (same as edit)
+    const latestNickname = document.getElementById("latestNickname").innerText;
+
+    // ✅ Set values
     menuInput.value = menuText;
+    nicknameInput.value = latestNickname;
 
     // Close modal
     document.getElementById("followOtherUserMenuModal").style.display = "none";
 
-    // ⏩ Trigger confirmation flow (same as EditModal)
+    // ✅ Trigger confirmation flow (now with filled nickname)
     document.getElementById('menuForm').requestSubmit();
   }
 });
+
 
 
         
