@@ -425,12 +425,11 @@ window.onload = async () => {
       if (data && data.restaurantName) {
         container.innerHTML = `
   <h2>🍽️ Today's restaurant is already set</h2>
-  <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
-  <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
-  <!-- <p><strong>First submitted at:</strong> ${data.first_submit}</p> -->
-  <!-- <p><strong>First submitted at:</strong> ${(data.first_submit || '').substring(0, 10)}</p> -->
-  <p><strong>First submitted at:</strong> ${formatDateTimeWithGMT7(data.first_submit)}</p>
-  <button class="btn btn-yes" onclick="proceedToForm('${data.restaurantName}')">🍱 Make Order</button>
+    <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
+    <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
+    <p><strong>First submitted at:</strong> ${formatDateTimeWithGMT7(data.first_submit)}</p>
+    <button class="btn btn-yes" onclick="proceedToForm('${data.restaurantName}')">🍱 Make Order</button>
+    <button id="viewMenuBtn" class="btn btn-view-menu" onclick="proceedToFormViewOnly()">👀 View My Menu</button>
 
 `;
 
