@@ -177,26 +177,33 @@
   }
 
   async function initLogin() {
-    const code = new URLSearchParams(window.location.search).get("code");
-    const container = document.getElementById("container");
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+  const container = document.getElementById("container");
 
-    if (!code) {
-      container.innerHTML = `<p>❌ LINE login failed. No code provided.</p>
-        <a href="index.html" class="btn">🔙 Back to Home</a>`;
-      return;
-    }
-
-    try {
-      const tokenData = await getAccessToken(code);
-      const profile = await getProfile(tokenData.access_token);
-
-      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-    } catch (err) {
-      container.innerHTML = `<p>❌ Error: ${err.message}</p>
-        <a href="index.html" class="btn">🔙 Back to Home</a>`;
-    }
+  // If no code param, skip login
+  if (!code) {
+    return;
   }
+
+  try {
+    const tokenData = await getAccessToken(code);
+    const profile = await getProfile(tokenData.access_token);
+
+    sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+    sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+
+    // Remove code & state from URL to prevent reuse and page refresh issues
+    if (window.history.replaceState) {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  } catch (err) {
+    container.innerHTML = `<p>❌ Error: ${err.message}</p>
+      <a href="index.html" class="btn">🔙 Back to Home</a>`;
+  }
+}
+
 
   function handleChoice(isAuthorized) {
   document.getElementById('formSection').style.display = 'block';
@@ -369,22 +376,23 @@
 
 // Run this after initLogin and initPage
 window.onload = async () => {
-  await initLogin();
+  await initLogin();  // will only run once if code param present, then remove code param
   await initPage();
 
   if (!isProfileValid()) {
     alert("Your session is invalid or expired. Please log in again.");
     window.location.href = "index.html";
-    return;  // Stop further execution on invalid session
+    return;
   }
 
-  // Set today's date in dd/mm/yyyy if profile is valid
+  // Set today's date
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const yyyy = today.getFullYear();
   document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
 };
+
 
 
     
