@@ -185,7 +185,7 @@
     }
   }
 
-  async function submitRestaurant(event) {
+  function submitRestaurant(event) {
   event.preventDefault();
   const restaurantName = document.getElementById('restaurantInput').value.trim();
   if (!restaurantName) {
@@ -196,34 +196,40 @@
   const tokenData = JSON.parse(sessionStorage.getItem('lineToken') || '{}');
   const profile = JSON.parse(sessionStorage.getItem('lineProfile') || '{}');
 
-  const postData = {
+  // Prepare query parameters for GET
+  const params = new URLSearchParams({
     action: 'submitRestaurant',
     userLineToken: tokenData.access_token || '',
     userProfileName: profile.displayName || profile.name || '',
-    restaurantName: restaurantName
+    restaurantName,
+    callback: 'submitRestaurantCallback' // JSONP callback name
+  });
+
+  // Create JSONP script
+  const script = document.createElement('script');
+  script.src = `${SCRIPT_URL}?${params.toString()}`;
+  script.onerror = () => {
+    alert('Error submitting restaurant.');
+    document.body.removeChild(script);
   };
 
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(postData)
-    });
-
-    const result = await response.json();
+  window.submitRestaurantCallback = function(result) {
+    document.body.removeChild(script);
+    delete window.submitRestaurantCallback;
 
     if (result.success) {
       alert('Restaurant submitted successfully!');
-      location.reload();  // Reload page to reflect changes
+      location.reload();
     } else if (result.message) {
       alert('Submission failed: ' + result.message + (result.existingRestaurant ? "\nToday's restaurant: " + result.existingRestaurant : ""));
     } else {
       alert('Submission failed for unknown reasons.');
     }
-  } catch (err) {
-    alert('Error submitting restaurant: ' + err.message);
-  }
+  };
+
+  document.body.appendChild(script);
 }
+
 
 
   function checkTodaysRestaurant() {
