@@ -352,7 +352,8 @@
 
       item.users.forEach(user => {
         const li = document.createElement("li");
-        li.textContent = user.user;  // username string
+        //li.textContent = user.user;  // username string
+        li.textContent = `${user.user} (${user.name || '-'})`;
         userList.appendChild(li);
       });
 
