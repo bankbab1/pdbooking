@@ -482,64 +482,71 @@
     }
 
     async function init() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
 
-      let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
-      let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
-      const restaurant = sessionStorage.getItem("restaurant");
+  let profile = JSON.parse(sessionStorage.getItem("lineProfile"));
+  let tokenData = JSON.parse(sessionStorage.getItem("lineToken"));
+  const restaurant = sessionStorage.getItem("restaurant");
 
-      // ✅ Restaurant required
-      if (!restaurant) {
-        document.getElementById('content').innerHTML = `
-    <p>❌ Restaurant not specified.</p>
-    <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
-  `;
-        return;
-      }
+  // Restaurant required check
+  if (!restaurant) {
+    document.getElementById('content').innerHTML = `
+      <p>❌ Restaurant not specified.</p>
+      <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
+    `;
+    return;
+  }
 
-      // ✅ LINE session missing and no code → fail
-      if ((!profile || !tokenData) && !code) {
-        document.getElementById('content').innerHTML = `
-    <p>❌ LINE login failed. No code provided.</p>
-    <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
-  `;
-        return;
-      }
-
-      // ✅ LINE session missing, but we have code → try login
-      if ((!profile || !tokenData) && code) {
-        console.log("Restaurant:", restaurant); // optional debug
-        try {
-          tokenData = await getAccessToken(code);
-          if (!tokenData.access_token) throw new Error("Access token missing");
-
-          profile = await getProfile(tokenData.access_token);
-          if (!profile.displayName) throw new Error("Profile displayName missing");
-
-          sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
-          sessionStorage.setItem("lineProfile", JSON.stringify(profile));
-
-          window.history.replaceState({}, document.title, REDIRECT_URI);
-        } catch (error) {
-          console.error(error);
-          document.getElementById('content').innerHTML = `
-      <p>❌ Error during login: ${error.message}</p>
+  // LINE session missing and no code → fail
+  if ((!profile || !tokenData) && !code) {
+    document.getElementById('content').innerHTML = `
+      <p>❌ LINE login failed. No code provided.</p>
       <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
     `;
-          return;
-        }
-      }
+    return;
+  }
 
+  // LINE session missing but have code → login
+  if ((!profile || !tokenData) && code) {
+    try {
+      tokenData = await getAccessToken(code);
+      if (!tokenData.access_token) throw new Error("Access token missing");
 
-      // ✅ All ready — render content
-      const content = document.getElementById('content');
-      content.innerHTML = `
+      profile = await getProfile(tokenData.access_token);
+      if (!profile.displayName) throw new Error("Profile displayName missing");
+
+      sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+      sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+
+      window.history.replaceState({}, document.title, REDIRECT_URI);
+    } catch (error) {
+      console.error(error);
+      document.getElementById('content').innerHTML = `
+        <p>❌ Error during login: ${error.message}</p>
+        <a href="https://bankbab1.github.io/pdbooking/" class="btn-back">🔙 Back to Home</a>
+      `;
+      return;
+    }
+  }
+
+  // Profile validation check
+  if (!profile || !profile.userId || profile.userId === "undefined" || profile.userId.trim() === "") {
+    document.getElementById('content').innerHTML = `
+      <p>❌ Invalid or expired LINE session detected.<br>Please <a href="https://bankbab1.github.io/pdbooking/">login again</a> to proceed.</p>
+    `;
+    return;
+  }
+
+  // Passed validation — render form and page content
+  const content = document.getElementById('content');
+  content.innerHTML = `
     <div style="text-align:center; margin-bottom: 1rem;">
       <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
     </div>
     <h2>👋 Hello, ${profile.displayName}</h2>
     <h3>🍴 Restaurant: <strong>${restaurant}</strong></h3>
+    
 
               <!--
 <form id="menuForm">
