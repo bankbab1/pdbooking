@@ -367,9 +367,18 @@
     window.location.href = "index.html";
     return;
   }
+
+  // Optional: check if today's restaurant is set in sessionStorage
+  const restaurant = sessionStorage.getItem("restaurant");
+  if (!restaurant) {
+    alert("Restaurant not specified. Please wait for the restaurant to be set or contact admin.");
+    return;
+  }
+
   sessionStorage.setItem("viewOnly", "true");
   window.location.href = "form.html";
 }
+
 
 
     
