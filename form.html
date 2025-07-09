@@ -522,15 +522,18 @@ window.addEventListener("click", (e) => {
                 <img src="${profile.pictureUrl || ''}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 2px solid #007BFF;" />
               </div>
               <h2>👋 Hello, ${profile.displayName}</h2>
-              //<form id="menuForm">
-                //<label>Date:</label>
-                //<input type="date" id="date" disabled />
-                //<label>Name:</label>
-                //<input type="text" id="nickname" placeholder="Your Name" required />
-                //<label>Menu:</label>
-                //<textarea id="menu" required></textarea>
-                //<button type="submit">✅ Submit Menu</button>
-              //</form>
+              <!--
+<form id="menuForm">
+  <label>Date:</label>
+  <input type="date" id="date" disabled />
+  <label>Name:</label>
+  <input type="text" id="nickname" placeholder="Your Name" required />
+  <label>Menu:</label>
+  <textarea id="menu" required></textarea>
+  <button type="submit">✅ Submit Menu</button>
+</form>
+-->
+
               <form id="menuForm">
   <label for="date">Date:</label>
   <input type="date" id="date" disabled
