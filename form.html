@@ -531,11 +531,13 @@ window.addEventListener("click", (e) => {
               <p id="status"></p>
 
               <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
-                <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
-                <p><strong>Date:</strong> <span id="latestDate">-</span></p>
-                <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
-                <button id="editMenuBtn" type="button">✏️ Edit</button>
-              </div>
+  <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
+  <p><strong>Date:</strong> <span id="latestDate">-</span></p>
+  <p><strong>Name:</strong> <span id="latestName">-</span></p> <!-- add this line -->
+  <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
+  <button id="editMenuBtn" type="button">✏️ Edit</button>
+</div>
+
 
               <div id="todayMenusCard" style="display:none; margin-top:2rem; padding:1rem; border-radius:12px; background:#eef3f9; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
   <h3>📋 Today's Menus by Users</h3>
@@ -595,16 +597,19 @@ window.addEventListener("click", (e) => {
             const saveEditBtn = document.getElementById('saveEditBtn');
 
             document.getElementById('editMenuBtn').addEventListener('click', () => {
-    const latestName = document.getElementById('latestNickname').innerText;
+    // Read name and menu from the visible card
+    const latestName = document.getElementById('latestName').innerText;
+    const latestMenu = document.getElementById('latestMenu').innerText;
 
-    // ✅ Set current values into the modal
-    document.getElementById('editMenuTextarea').value = document.getElementById('latestMenu').innerText;
-    document.getElementById('editNameInput').value = document.getElementById('latestName').innerText;
+    // Set values into modal inputs
+    document.getElementById('editNameInput').value = latestName;
+    document.getElementById('editMenuTextarea').value = latestMenu;
 
-
+    // Show modal and focus textarea
     editModal.style.display = 'block';
-    document.getElementById('editMenuTextarea').focus();
+    editTextarea.focus();
 });
+
 
             // Confirm Submit Modal Logic
 const confirmModal = document.getElementById('confirmModal');
