@@ -659,7 +659,7 @@ confirmSubmitBtn.addEventListener('click', () => {
         body: JSON.stringify({
             userId: profile.userId,
             displayName: profile.displayName,
-            name, // ⬅️ New field
+            nickname, // ⬅️ New field
             date,
             menu
         })
@@ -675,7 +675,7 @@ confirmSubmitBtn.addEventListener('click', () => {
     // Update "Your Last Menu" card display — including name!
     document.getElementById("latestDate").innerText = date;
     document.getElementById("latestMenu").innerText = menu;
-    document.getElementById("latestNickname").innerText = name;  // <---- Add this line
+    document.getElementById("latestNickname").innerText = nickname;  // <---- Add this line
     document.getElementById("latestMenuCard").style.display = "block";
 });
 
