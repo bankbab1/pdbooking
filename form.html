@@ -485,6 +485,18 @@ window.addEventListener("click", (e) => {
     return;
   }
 
+// ✅ ⬇️ ADD THIS BLOCK HERE
+  const restaurant = sessionStorage.getItem("restaurant");
+  if (!restaurant) {
+    document.getElementById('content').innerHTML = `
+      <p>❌ Restaurant not specified.</p>
+      <a href="restaurant.html" class="btn-back">🔙 Go back to set Restaurant</a>
+    `;
+    return;
+  }
+
+  // ✅ You can also show restaurant name
+  console.log("Restaurant:", restaurant);
   try {
     tokenData = await getAccessToken(code);
     if (!tokenData.access_token) {
