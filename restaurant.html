@@ -352,13 +352,40 @@
 }
 
     function isProfileValid() {
-  const profile = JSON.parse(sessionStorage.getItem('lineProfile') || '{}');
-  const name = profile.displayName || profile.name || '';
-  if (!name || name === 'undefined') {
+  const profileRaw = sessionStorage.getItem("lineProfile");
+  if (!profileRaw) return false;
+
+  try {
+    const profile = JSON.parse(profileRaw);
+    // Check if essential profile data exists
+    if (!profile.displayName || profile.displayName === "undefined" || profile.displayName.trim() === "") {
+      return false;
+    }
+    return true;
+  } catch {
     return false;
   }
-  return true;
 }
+
+// Run this after initLogin and initPage
+window.onload = async () => {
+  await initLogin();
+  await initPage();
+
+  if (!isProfileValid()) {
+    alert("Your session is invalid or expired. Please log in again.");
+    window.location.href = "index.html";
+    return;  // Stop further execution on invalid session
+  }
+
+  // Set today's date in dd/mm/yyyy if profile is valid
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = today.getFullYear();
+  document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
+};
+
 
     
   function proceedToFormViewOnly() {
