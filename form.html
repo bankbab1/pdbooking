@@ -647,10 +647,13 @@ confirmSubmitBtn.addEventListener('click', () => {
     dateInput.valueAsDate = new Date();
     dateInput.disabled = true;
 
+    // Update "Your Last Menu" card display — including name!
     document.getElementById("latestDate").innerText = date;
     document.getElementById("latestMenu").innerText = menu;
+    document.getElementById("latestNickname").innerText = nickname;  // <---- Add this line
     document.getElementById("latestMenuCard").style.display = "block";
 });
+
 
 // Close modal if clicking outside
 window.addEventListener('click', (e) => {
