@@ -303,7 +303,9 @@
             document.getElementById("latestMenu").innerText = data.menu;
 
             // ✅ Store user's name (nickname) in a hidden span
-            document.getElementById("latestNickname").innerText = data.user || "-";
+            //document.getElementById("latestNickname").innerText = data.user || "-";
+            document.getElementById("latestNickname").innerText = data.name || "-"; // ✅ Show nickname
+
         } else {
             document.getElementById("latestDate").innerText = "-";
             document.getElementById("latestMenu").innerText = "❌ No order yet";
