@@ -687,7 +687,16 @@ formData.append("menu", menu);
 
 fetch(SCRIPT_URL, {
     method: 'POST',
-    body: formData,
+    mode: 'no-cors', // optional but common with Apps Script CORS
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        action: "submitMenu",  // <-- this tells the script to call submitMenu()
+        userId: profile.userId,
+        displayName: profile.displayName,
+        nickname,
+        date,
+        menu
+    })
 })
 .then(() => {
     document.getElementById('status').innerText = "✅ Submitted successfully!";
@@ -702,6 +711,7 @@ fetch(SCRIPT_URL, {
     console.error("❌ Failed to submit menu:", err);
     alert("Failed to submit your menu. Please try again.");
 });
+
 
 
     document.getElementById('status').innerText = "✅ Submitted successfully!";
