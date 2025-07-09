@@ -192,16 +192,29 @@
   const submitBtn = document.querySelector('#formSection form button[type="submit"]');
   const restaurantInput = document.getElementById('restaurantInput');
 
-  if (!isAuthorized && hour < 14) {
+  // Check time window
+  const withinOrderTime = isWithinOrderTime();
+
+  if (!withinOrderTime) {
+    // Outside allowed time, disable submit + input and show a clear message
     waitMessage.style.display = 'block';
+    waitMessage.innerHTML = `⏳ Submissions are not allowed before 07:00 or after 18:00.<br>Please come back during ordering hours.`;
     submitBtn.disabled = true;
-    restaurantInput.disabled = true;  // Disable input field too
+    restaurantInput.disabled = true;
+  } else if (!isAuthorized && hour < 14) {
+    // Original wait-until-14:00 logic
+    waitMessage.style.display = 'block';
+    waitMessage.innerHTML = `⏳ Please wait until 14:00.<br>If no one specifies the restaurant by 14:00, you can return to set it.`;
+    submitBtn.disabled = true;
+    restaurantInput.disabled = true;
   } else {
+    // Allowed to submit
     waitMessage.style.display = 'none';
     submitBtn.disabled = false;
-    restaurantInput.disabled = false; // Enable input field
+    restaurantInput.disabled = false;
   }
 }
+
 
 
 
@@ -261,6 +274,26 @@
 
     document.body.appendChild(script);
   }
+
+    function isWithinOrderTime() {
+  const now = new Date();
+  const gmt7Offset = 7 * 60; // minutes
+  const localOffset = now.getTimezoneOffset(); // in minutes
+  const offsetDiff = gmt7Offset + localOffset;
+
+  // Adjust to GMT+7 time
+  now.setMinutes(now.getMinutes() + offsetDiff);
+
+  const hour = now.getHours();
+  const minutes = now.getMinutes();
+
+  // Block before 7 AM and after 6 PM
+  if (hour < 7 || hour >= 18) return false;
+
+  // Add any special block ranges here if needed
+
+  return true;
+}
 
   function checkTodaysRestaurant() {
     return new Promise((resolve, reject) => {
