@@ -254,7 +254,11 @@
 <div id="confirmModal" class="modal">
   <div class="modal-content">
     <h3>Confirm Submit Menu</h3>
-    <p><strong>Menu:</strong> <span id="confirmMenuText"></span></p>
+    <!--<p><strong>Menu:</strong> <span id="confirmMenuText"></span></p>-->
+      <label for="confirmMenuText"><strong>Menu:</strong></label>
+<textarea id="confirmMenuText"
+    style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;"
+    rows="4"></textarea>
     <div class="modal-buttons">
         <button id="confirmSubmitBtn" class="btn-save">Confirm</button>
       <button id="cancelConfirmBtn" class="btn-cancel">Cancel</button>
