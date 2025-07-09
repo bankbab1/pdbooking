@@ -210,20 +210,31 @@
     <div class="container" id="content">
         <p>Loading LINE profile...</p>
     </div>
+    <span id="latestNickname" style="display: none;"></span>
 
     <!-- Modal for Edit -->
     <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle"
-        aria-describedby="editModalDesc">
-        <div class="modal-content">
-            <h3 id="editModalTitle">Edit Menu</h3>
-            <textarea id="editMenuTextarea" rows="5"
-                style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
-            <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <button id="saveEditBtn" class="btn-save" type="button">OK</button>
-                <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
-            </div>
+    aria-describedby="editModalDesc">
+    <div class="modal-content">
+        <h3 id="editModalTitle">Edit Menu</h3>
+
+        <!-- ⬇️ Add this: Name input -->
+        <label for="editNameInput">Name:</label>
+        <input type="text" id="editNameInput" placeholder="Your Name"
+            style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;" />
+
+        <!-- ⬇️ Existing menu input -->
+        <label for="editMenuTextarea">Menu:</label>
+        <textarea id="editMenuTextarea" rows="5"
+            style="width:100%; padding:8px; font-size:1rem; border-radius:6px; border:1px solid #ccc;"></textarea>
+
+        <div class="modal-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <button id="saveEditBtn" class="btn-save" type="button">OK</button>
+            <button id="cancelEditBtn" class="btn-cancel" type="button">Cancel</button>
         </div>
     </div>
+</div>
+
     <!-- Modal for Follow Other User Menu -->
 <div id="followOtherUserMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="followModalTitle" aria-describedby="followModalDesc" style="display:none;">
   <div class="modal-content">
@@ -281,24 +292,29 @@
         }
 
         async function fetchLastMenu(userId) {
-            try {
-                const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
-                const res = await fetch(url);
-                const data = await res.json();
+    try {
+        const url = `${SCRIPT_URL}?userId=${encodeURIComponent(userId)}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-                if (data.menu && data.menu.trim() !== '') {
-                    document.getElementById("latestDate").innerText = data.submit_date || "-";
-                    document.getElementById("latestMenu").innerText = data.menu;
-                } else {
-                    document.getElementById("latestDate").innerText = "-";
-                    document.getElementById("latestMenu").innerText = "❌ No order yet";
-                }
+        if (data.menu && data.menu.trim() !== '') {
+            document.getElementById("latestDate").innerText = data.submit_date || "-";
+            document.getElementById("latestMenu").innerText = data.menu;
 
-                document.getElementById("latestMenuCard").style.display = "block";
-            } catch (err) {
-                console.error("Error fetching last menu:", err);
-            }
+            // ✅ Store user's name (nickname) in a hidden span
+            document.getElementById("latestNickname").innerText = data.user || "-";
+        } else {
+            document.getElementById("latestDate").innerText = "-";
+            document.getElementById("latestMenu").innerText = "❌ No order yet";
+            document.getElementById("latestNickname").innerText = "-";
         }
+
+        document.getElementById("latestMenuCard").style.display = "block";
+    } catch (err) {
+        console.error("Error fetching last menu:", err);
+    }
+}
+
 
         async function fetchTodayMenus() {
   try {
@@ -579,10 +595,15 @@ window.addEventListener("click", (e) => {
             const saveEditBtn = document.getElementById('saveEditBtn');
 
             document.getElementById('editMenuBtn').addEventListener('click', () => {
-                editTextarea.value = document.getElementById('latestMenu').innerText;
-                editModal.style.display = 'block';
-                editTextarea.focus();
-            });
+    const latestName = document.getElementById('latestNickname').innerText;
+
+    // ✅ Set current values into the modal
+    document.getElementById('editMenuTextarea').value = document.getElementById('latestMenu').innerText;
+    document.getElementById('editNameInput').value = latestName;
+
+    editModal.style.display = 'block';
+    document.getElementById('editMenuTextarea').focus();
+});
 
             // Confirm Submit Modal Logic
 const confirmModal = document.getElementById('confirmModal');
@@ -637,23 +658,29 @@ window.addEventListener('click', (e) => {
             });
 
             saveEditBtn.addEventListener('click', () => {
-                const newMenu = editTextarea.value.trim();
-                if (!newMenu) {
-                    alert('Menu cannot be empty!');
-                    return;
-                }
-                document.getElementById('menu').value = newMenu;
-                editModal.style.display = 'none';
+    const newMenu = editTextarea.value.trim();
+    const newName = document.getElementById('editNameInput').value.trim();
 
-                // Trigger form submit programmatically
-                document.getElementById('menuForm').requestSubmit();
-            });
+    if (!newMenu) {
+        alert('Menu cannot be empty!');
+        return;
+    }
 
-            window.addEventListener('click', (e) => {
-                if (e.target === editModal) {
-                    editModal.style.display = 'none';
-                }
-            });
+    if (!newName) {
+        alert('Name cannot be empty!');
+        return;
+    }
+
+    // ✅ Update the main form fields before submitting
+    document.getElementById('menu').value = newMenu;
+    document.getElementById('nickname').value = newName;
+
+    editModal.style.display = 'none';
+
+    // ✅ Submit form programmatically
+    document.getElementById('menuForm').requestSubmit();
+});
+
 
 
             document.getElementById('menuForm').addEventListener('submit', function (e) {
