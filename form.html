@@ -404,9 +404,10 @@
 
   // Build the text content listing users who chose this menu
   let text = `Menu: ${menu}\n\nUsers:\n`;
-  users.forEach(u => {
-    text += `- ${u.user}\n`;
-  });
+users.forEach(u => {
+  text += `- ${u.user} (${u.name || "-"})\n`;
+});
+
 
   textarea.value = text;
   modal.style.display = "block";
