@@ -678,18 +678,31 @@ confirmSubmitBtn.addEventListener('click', () => {
     const menu = document.getElementById('menu').value;
     const nickname = document.getElementById('nickname').value;
 
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            userId: profile.userId,
-            displayName: profile.displayName,
-            nickname, // ⬅️ New field
-            date,
-            menu
-        })
-    });
+    const formData = new URLSearchParams();
+formData.append("userId", profile.userId);
+formData.append("displayName", profile.displayName);
+formData.append("nickname", nickname);
+formData.append("date", date);
+formData.append("menu", menu);
+
+fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: formData,
+})
+.then(() => {
+    document.getElementById('status').innerText = "✅ Submitted successfully!";
+    document.getElementById('menuForm').reset();
+    document.getElementById('date').valueAsDate = new Date();
+    document.getElementById("latestDate").innerText = date;
+    document.getElementById("latestMenu").innerText = menu;
+    document.getElementById("latestNickname").innerText = nickname;
+    document.getElementById("latestMenuCard").style.display = "block";
+})
+.catch((err) => {
+    console.error("❌ Failed to submit menu:", err);
+    alert("Failed to submit your menu. Please try again.");
+});
+
 
     document.getElementById('status').innerText = "✅ Submitted successfully!";
     document.getElementById('menuForm').reset();
