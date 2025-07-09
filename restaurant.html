@@ -192,7 +192,7 @@
   const submitBtn = document.querySelector('#formSection form button[type="submit"]');
   const restaurantInput = document.getElementById('restaurantInput');
 
-  if (!isAuthorized && hour < 14) {
+  if (!isAuthorized && hour < 18) {
     waitMessage.style.display = 'block';
     submitBtn.disabled = true;
     restaurantInput.disabled = true;  // Disable input field too
