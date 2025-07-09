@@ -506,6 +506,8 @@ window.addEventListener("click", (e) => {
               <form id="menuForm">
                 <label>Date:</label>
                 <input type="date" id="date" disabled />
+                <label>Name:</label>
+                <input type="text" id="nickname" placeholder="Your Name" required />
                 <label>Menu:</label>
                 <textarea id="menu" required></textarea>
                 <button type="submit">✅ Submit Menu</button>
@@ -596,6 +598,7 @@ confirmSubmitBtn.addEventListener('click', () => {
 
     const date = document.getElementById('date').value;
     const menu = document.getElementById('menu').value;
+    const nickname = document.getElementById('nickname').value;
 
     fetch(SCRIPT_URL, {
         method: 'POST',
@@ -604,6 +607,7 @@ confirmSubmitBtn.addEventListener('click', () => {
         body: JSON.stringify({
             userId: profile.userId,
             displayName: profile.displayName,
+            nickname, // ⬅️ New field
             date,
             menu
         })
@@ -654,8 +658,12 @@ window.addEventListener('click', (e) => {
 
             document.getElementById('menuForm').addEventListener('submit', function (e) {
     e.preventDefault();
-
+    const nickname = document.getElementById('nickname').value.trim();
     const menuText = document.getElementById('menu').value.trim();
+                if (!nickname) {
+        alert("Name cannot be empty.");
+        return;
+    }
     if (!menuText) {
         alert("Menu cannot be empty.");
         return;
