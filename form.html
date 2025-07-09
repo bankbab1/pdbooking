@@ -305,7 +305,8 @@
         const data = await res.json();
 
         if (data.menu && data.menu.trim() !== '') {
-          document.getElementById("latestDate").innerText = data.submit_date || "-";
+          //document.getElementById("latestDate").innerText = data.submit_date || "-";
+          document.getElementById("latestDate").innerText = (data.submit_date || "").substring(0, 10) || "-";
           document.getElementById("latestMenu").innerText = data.menu;
 
           // ✅ Store user's name (nickname) in a hidden span
