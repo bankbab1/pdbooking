@@ -533,7 +533,7 @@ window.addEventListener("click", (e) => {
               <div id="latestMenuCard" style="margin-top: 2rem; padding: 1rem; border-radius: 12px; background: #eef3f9; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: none;">
   <h3 style="margin-top: 0;">📦 Your Last Menu</h3>
   <p><strong>Date:</strong> <span id="latestDate">-</span></p>
-  <p><strong>Name:</strong> <span id="latestName">-</span></p> <!-- add this line -->
+  <p><strong>Name:</strong> <span id="latestNickname">-</span></p> <!-- add this line -->
   <p><strong>Menu:</strong> <span id="latestMenu">-</span></p>
   <button id="editMenuBtn" type="button">✏️ Edit</button>
 </div>
@@ -598,11 +598,11 @@ window.addEventListener("click", (e) => {
 
             document.getElementById('editMenuBtn').addEventListener('click', () => {
     // Read name and menu from the visible card
-    const latestName = document.getElementById('latestName').innerText;
+    const latestNickname = document.getElementById('latestNickname').innerText;
     const latestMenu = document.getElementById('latestMenu').innerText;
 
     // Set values into modal inputs
-    document.getElementById('editNameInput').value = latestName;
+    document.getElementById('editNameInput').value = latestNickname;
     document.getElementById('editMenuTextarea').value = latestMenu;
 
     // Show modal and focus textarea
