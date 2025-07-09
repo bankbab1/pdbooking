@@ -271,12 +271,13 @@
 
       if (data && data.restaurantName) {
         container.innerHTML = `
-          <h2>🍽️ Today's restaurant is already set</h2>
-          <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
-          <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
-          <p><strong>First submitted at:</strong> ${data.first_submit}</p>
-          <button class="btn btn-yes" onclick="location.reload()">Refresh</button>
-        `;
+  <h2>🍽️ Today's restaurant is already set</h2>
+  <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
+  <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
+  <p><strong>First submitted at:</strong> ${data.first_submit}</p>
+  <button class="btn btn-yes" onclick="window.location.href='form.html'">🍱 Make Order</button>
+`;
+
       } else {
         document.querySelector('.button-group').style.display = 'flex';
         document.getElementById('formSection').style.display = 'none';
