@@ -102,7 +102,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="container">
     <h2>🍽️ Are you authorized to define today’s restaurant?</h2>
 
     <div class="button-group">
@@ -123,9 +123,58 @@
   </div>
 
   <script>
+    const CLIENT_ID = '2007709795';
+    const CLIENT_SECRET = '7a089078db1f12fe578c73ac1f893f73';
+    const REDIRECT_URI = 'https://bankbab1.github.io/pdbooking/restaurant.html';
+
+    async function getAccessToken(code) {
+      const res = await fetch("https://api.line.me/oauth2/v2.1/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: REDIRECT_URI,
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET
+        })
+      });
+      return res.json();
+    }
+
+    async function getProfile(access_token) {
+      const res = await fetch("https://api.line.me/v2/profile", {
+        headers: { Authorization: "Bearer " + access_token }
+      });
+      return res.json();
+    }
+
+    async function initLogin() {
+      const code = new URLSearchParams(window.location.search).get("code");
+      const container = document.getElementById("container");
+
+      if (!code) {
+        container.innerHTML = `<p>❌ LINE login failed. No code provided.</p>
+          <a href="index.html" class="btn">🔙 Back to Home</a>`;
+        return;
+      }
+
+      try {
+        const tokenData = await getAccessToken(code);
+        const profile = await getProfile(tokenData.access_token);
+
+        // Save to sessionStorage for use in form.html
+        sessionStorage.setItem("lineToken", JSON.stringify(tokenData));
+        sessionStorage.setItem("lineProfile", JSON.stringify(profile));
+
+      } catch (err) {
+        container.innerHTML = `<p>❌ Error: ${err.message}</p>
+          <a href="index.html" class="btn">🔙 Back to Home</a>`;
+      }
+    }
+
     function handleChoice(isAuthorized) {
       document.getElementById('formSection').style.display = 'block';
-
       const now = new Date();
       const hour = now.getHours();
       const waitMessage = document.getElementById('waitMessage');
@@ -142,16 +191,18 @@
       const restaurant = document.getElementById('restaurantInput').value.trim();
       if (restaurant) {
         sessionStorage.setItem('restaurant', restaurant);
-        window.location.href = 'form.html'; // ✅ Redirect to main form page
+        window.location.href = 'form.html'; // go to main form
       }
     }
 
-    // Display today’s date as DD/MM/YYYY
+    // Set today's date
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
     document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
+
+    window.onload = initLogin;
   </script>
 </body>
 </html>
