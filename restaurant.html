@@ -275,7 +275,8 @@
   <p><strong>Restaurant:</strong> ${data.restaurantName}</p>
   <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
   <p><strong>First submitted at:</strong> ${data.first_submit}</p>
-  <button class="btn btn-yes" onclick="window.location.href='form.html'">🍱 Make Order</button>
+  <button class="btn btn-yes" onclick="proceedToForm('${data.restaurantName}')">🍱 Make Order</button>
+
 `;
 
       } else {
@@ -298,6 +299,12 @@
     const yyyy = today.getFullYear();
     document.getElementById('todayDate').textContent = `${dd}/${mm}/${yyyy}`;
   };
+
+  function proceedToForm(restaurantName) {
+  sessionStorage.setItem("restaurant", restaurantName);
+  window.location.href = "form.html";
+}
+
   </script>
 
 </body>
