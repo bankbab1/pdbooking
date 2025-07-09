@@ -196,26 +196,13 @@
   const tokenData = JSON.parse(sessionStorage.getItem('lineToken') || '{}');
   const profile = JSON.parse(sessionStorage.getItem('lineProfile') || '{}');
 
-  // Prepare query parameters for GET
-  const params = new URLSearchParams({
-    action: 'submitRestaurant',
-    userLineToken: tokenData.access_token || '',
-    userProfileName: profile.displayName || profile.name || '',
-    restaurantName,
-    callback: 'submitRestaurantCallback' // JSONP callback name
-  });
+  // JSONP callback name (unique)
+  const callbackName = 'submitRestaurantCallback_' + Date.now();
 
-  // Create JSONP script
-  const script = document.createElement('script');
-  script.src = `${SCRIPT_URL}?${params.toString()}`;
-  script.onerror = () => {
-    alert('Error submitting restaurant.');
+  window[callbackName] = function(result) {
+    // Clean up
+    delete window[callbackName];
     document.body.removeChild(script);
-  };
-
-  window.submitRestaurantCallback = function(result) {
-    document.body.removeChild(script);
-    delete window.submitRestaurantCallback;
 
     if (result.success) {
       alert('Restaurant submitted successfully!');
@@ -227,8 +214,25 @@
     }
   };
 
+  const params = new URLSearchParams({
+    action: 'submitRestaurant',
+    userLineToken: tokenData.access_token || '',
+    userProfileName: profile.displayName || profile.name || '',
+    restaurantName,
+    callback: callbackName
+  });
+
+  const script = document.createElement('script');
+  script.src = SCRIPT_URL + '?' + params.toString();
+  script.onerror = () => {
+    alert('Error submitting restaurant.');
+    delete window[callbackName];
+    document.body.removeChild(script);
+  };
+
   document.body.appendChild(script);
 }
+
 
 
 
