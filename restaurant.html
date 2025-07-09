@@ -309,7 +309,7 @@
   const minutes = now.getMinutes();
 
   // Block before 7 AM and after 6 PM
-  if (hour < 7 || hour >= 19) return false;
+  if (hour < 7 || hour >= 18) return false;
 
   // Add any special block ranges here if needed
 
@@ -429,7 +429,6 @@ window.onload = async () => {
     <p><strong>Submitted by:</strong> ${data.userProfileName}</p>
     <p><strong>First submitted at:</strong> ${formatDateTimeWithGMT7(data.first_submit)}</p>
     <button class="btn btn-yes" onclick="proceedToForm('${data.restaurantName}')">🍱 Make Order</button>
-    <button id="viewMenuBtn" class="btn btn-view-menu" onclick="proceedToFormViewOnly()">👀 View My Menu</button>
 
 `;
 
